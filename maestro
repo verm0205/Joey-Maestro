@@ -1,0 +1,21 @@
+<?php
+
+if ($argv[1] === 'serve') {
+    exec('php -S 0.0.0.0:8888 -t public');
+}
+
+if ($argv[1] === 'phpstan') {
+    passthru('php vendor/bin/phpstan --ansi');
+}
+
+if ($argv[1] === 'phpcs') {
+    passthru('php vendor/bin/phpcs --colors');
+}
+
+if ($argv[1] === 'deptrac') {
+    passthru('php vendor/bin/deptrac --ansi');
+}
+
+if ($argv[1] === 'phpcbf') {
+    passthru('php vendor/bin/phpcbf --colors');
+}
