@@ -10,7 +10,8 @@ use Framework\Request;
 
 $config = array(
     'APP_ENV' => 'development',
-    'VIEWS_PATH' => 'app/views'
+    'VIEWS_PATH' => 'app/views',
+    'APP_DB' => 'database.sqlite'
 );
 
 // Initialize the Kernel with configuration

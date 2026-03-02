@@ -1,0 +1,91 @@
+{% extends "partials/base.html.twig" %}
+
+{% set pageTitle = "Tasks" %}
+
+{% set priorities = {
+    0: 'low',
+    1: 'moderate',
+    2: 'high',
+    3: 'urgent'
+} %}
+
+{% set priorityColours = {
+    0: 'secondary',
+    1: 'info',
+    2: 'warning',
+    3: 'danger'
+} %}
+
+{% set statuses = {
+    0: 'new',
+    1: 'deferred',
+    2: 'in progress',
+    3: 'cancelled',
+    4: 'completed'
+} %}
+
+{% set statusColours = {
+    0: 'secondary',
+    1: 'warning',
+    2: 'info',
+    3: 'danger',
+    4: 'success'
+} %}
+
+{% block content %}
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <strong>Task Details</strong>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-sm-3 fw-bold">Title</div>
+                <div class="col-sm-9">{{ task.title }}</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3 fw-bold">Description</div>
+                <div class="col-sm-9 text-break">{{ task.description }}</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3 fw-bold">Priority</div>
+                <div class="col-sm-9">
+                    <span class="badge bg-{{ priorityColours[task.priority] }}">{{ priorities[task.priority]|capitalize }}</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3 fw-bold">Status</div>
+                <div class="col-sm-9">
+                    <span class="badge bg-{{ statusColours[task.status] }}">{{ statuses[task.status]|title }}</span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3 fw-bold">Progress</div>
+                <div class="col-sm-9">
+                    <div class="progress" role="progressbar" aria-valuenow="{{ task.progress }}" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar" style="width: {{ task.progress }}%">{{ task.progress }}%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3 fw-bold">Created</div>
+                <div class="col-sm-9">{{ task.createdAt|date("d/m/Y") }}</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3 fw-bold">Completed</div>
+                <div class="col-sm-9">
+                    {% if task.completedAt %}
+                        {{ task.completedAt|date("d/m/Y") }}
+                    {% else %}
+                        <span class="text-muted">Not completed yet</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

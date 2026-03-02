@@ -11,11 +11,9 @@ class Route
     /** @var callable */
     public $callback;
 
-    /**
-     * @param string $method
-     * @param string $path
-     * @param callable $callback
-     */
+    /** @var string[] */
+    public array $routeParameters;
+
     public function __construct(string $method, string $path, callable $callback)
     {
         $this->method = $method;
@@ -29,6 +27,11 @@ class Route
             return false;
         }
 
-        return $path === $this->path;
+        if (preg_match(';^' . $this->path . '/?$;', $path, $matches)) {
+            $this->routeParameters = $matches;
+            return true;
+        }
+
+        return false;
     }
 }
