@@ -1,24 +1,30 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <title>Taskey - {{ pageTitle }}</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css" integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-              <a class="navbar-brand" href="/">Taskey</a>
-              <ul class="navbar-nav ">
-                <li class="nav-item"><a href="/about" class="nav-link">About</a></li>
-                <li class="nav-item"><a href="/tasks" class="nav-link">Tasks</a></li>
-              </ul>
-            </div>
-        </nav>
-        <div class="container mt-5">
-            {% block content %}{% endblock %}
-        </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js" integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    </body>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ pageTitle }} — Joey Vermeulen</title>
+    <link rel="stylesheet" href="/css/stylesheet.css">
+    {% block head %}{% endblock %}
+</head>
+<body>
+<nav class="navbar" role="navigation" aria-label="Hoofd navigatie">
+    <div class="nav-left">
+        <img src="/img/joeypfp.jpg" alt="Profielfoto Joey Vermeulen" class="avatar">
+        <span class="profile-name">Joey Vermeulen</span>
+    </div>
+
+    <ul class="nav-right" role="list">
+        <li><a href="/" class="{{ request.path == '/' ? 'active' : '' }}">Home</a></li>
+        <li><a href="/profile" class="{{ request.path == '/profile' ? 'active' : '' }}">Profile</a></li>
+        <li><a href="/dashboard" class="{{ request.path == '/dashboard' ? 'active' : '' }}">Dashboard</a></li>
+        <li><a href="/faq" class="{{ request.path == '/faq' ? 'active' : '' }}">FAQ</a></li>
+        <li><a href="/blog" class="{{ request.path == '/blog' ? 'active' : '' }}">Blog</a></li>
+    </ul>
+</nav>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+</body>
 </html>

@@ -3,6 +3,39 @@
 {% set pageTitle = "Home" %}
 
 {% block content %}
-    <h1>Home</h1>
-    <p>Welcome to Taskey!</p>
+    <section class="hero" role="region" aria-label="Welkom sectie">
+        <div class="left">
+            <h1>Welkom op mijn Portfolio</h1>
+            <p>Ik ben Joey Vermeulen, een eerstejaars HBO-ICT student aan de HZ University of Applied Sciences.</p>
+
+            <div class="btn-group">
+                <a href="/profile" class="btn btn-primary">Bekijk profiel</a>
+                <a href="/dashboard" class="btn btn-secondary">Mijn voortgang</a>
+            </div>
+        </div>
+
+        <div class="right">
+            <a href="https://www.hz.nl/" target="_blank" rel="noopener noreferrer">
+                <img src="/img/hz-university-of-applied-sciences.png" alt="HZ University logo" class="hz-logo">
+            </a>
+            <div>
+                <p><strong>Waarom HBO-ICT</strong></p>
+                <p>Leergierigheid en praktijkgerichte projecten maken deze studie geschikt voor mensen zoals ik die willen leren door doen.</p>
+
+                <ul aria-label="Waarom HBO-ICT">
+                    <li>Praktische projecten die nieuwe skills leren en gebruiken</li>
+                    <li>Samenwerken in teams en professionele workflows</li>
+                    <li>Ruimte om mijn creativiteit te verbeteren en meer technische verdieping in engineering</li>
+                </ul>
+            </div>
+
+            <h2>Contact / Links</h2>
+            <aside class="aside-menu" aria-label="Links relevant voor studie">
+                <ul>
+                    <li>Mijn HZ: <a href="https://www.hz.nl/" target="_blank" rel="noopener noreferrer">HZ University</a></li>
+                    <li>Mijn Mail: <a href="mailto:verm0205@hz.nl">verm0205@hz.nl</a></li>
+                </ul>
+            </aside>
+        </div>
+    </section>
 {% endblock %}

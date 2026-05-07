@@ -1,0 +1,28 @@
+{% extends "partials/base.html.twig" %}
+
+{% set pageTitle = "SWOT-analyse" %}
+
+{% block content %}
+    <article>
+        <h1>Persoonlijke SWOT-analyse</h1>
+        <p class="post-meta">Gepubliceerd op: 2024</p>
+
+        <div class="swot-grid">
+            <div class="swot-item">
+                <h3>Strengths</h3>
+                <ul>
+                    <li>Leergierig</li>
+                    <li>Basiservaring met programmeren</li>
+                </ul>
+            </div>
+            <div class="swot-item">
+                <h3>Weaknesses</h3>
+                <ul>
+                    <li>Soms te perfectionistisch</li>
+                    <li>Snel afgeleid</li>
+                </ul>
+            </div>
+        </div>
+        <a href="/blog" class="btn btn-secondary" style="margin-top: 20px;">Terug naar overzicht</a>
+    </article>
+{% endblock %}

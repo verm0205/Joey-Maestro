@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use Framework\Response;
 use Framework\ResponseFactory;
+use Framework\Request;
 
 class HomeController
 {
@@ -14,13 +15,46 @@ class HomeController
         $this->responseFactory = $responseFactory;
     }
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return $this->responseFactory->view("index.html.twig");
+        return $this->responseFactory->view('index.html.twig', [
+            'request' => $request
+        ]);
     }
 
-    public function about(): Response
+    public function profile(Request $request): Response
     {
-        return $this->responseFactory->view("about.html.twig");
+        return $this->responseFactory->view('profile.html.twig', [
+            'request' => $request
+        ]);
+    }
+
+    public function dashboard(Request $request): Response
+    {
+        // Hier kun je later data uit de database ophalen voor je voortgang
+        return $this->responseFactory->view('dashboard.html.twig', [
+            'request' => $request
+        ]);
+    }
+
+    public function faq(Request $request): Response
+    {
+        return $this->responseFactory->view('faq.html.twig', [
+            'request' => $request
+        ]);
+    }
+
+    public function blogIndex(Request $request): Response
+    {
+        return $this->responseFactory->view('blog.html.twig', ['request' => $request]);
+    }
+
+    public function blogShow(Request $request): Response
+    {
+        // We halen de 'slug' (bijv. 'swot') uit de route parameters
+        $slug = $request->getAttribute('slug');
+
+        // We checken of het bestand bestaat om fouten te voorkomen
+        return $this->responseFactory->view("blogs/{$slug}.html.twig", ['request' => $request]);
     }
 }

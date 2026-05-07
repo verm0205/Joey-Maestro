@@ -20,16 +20,16 @@ class ResponseFactory
 
     /**
      * @param string $view
-     * @param array<mixed> $parameters
+     * @param array<mixed> $context
      * @return Response
      */
-    public function view(string $view, mixed $parameters = []): Response
+    public function view(string $view, array $context = []): Response
     {
         $response = new Response();
 
         try {
             $response->responseCode = 200;
-            $response->body = $this->twig->render($view, $parameters);
+            $response->body = $this->twig->render($view, $context);
             return $response;
         } catch (\Exception $e) {
             $response->responseCode = 500;
@@ -50,5 +50,27 @@ class ResponseFactory
             $response->body = $e->getMessage();
             return $response;
         }
+    }
+
+    public function internalError(): Response
+    {
+        $response = new Response();
+        try {
+            $response->responseCode = 500;
+            $response->body = $this->twig->render('500.html.twig');
+            return $response;
+        } catch (\Exception $e) {
+            $response->responseCode = 500;
+            $response->body = $e->getMessage();
+            return $response;
+        }
+    }
+
+    public function redirect(string $url): Response
+    {
+        $response = new Response();
+        $response->responseCode = 302;
+        $response->header = "Location: " . $url;
+        return $response;
     }
 }

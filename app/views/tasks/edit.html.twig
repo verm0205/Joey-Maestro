@@ -1,7 +1,7 @@
 {% extends "tasks/base.twig" %}
 
 {% block content %}
-    <form method="POST" action="/tasks">
+    <form method="POST" action="/tasks/{{ task.id }}/edit">
         <div class="card shadow-sm">
             <div class="card-header">
                 <strong>Create New Task</strong>
@@ -19,7 +19,7 @@
                 <div class="row mb-3">
                     <div class="col-sm-3 fw-bold"><label for="description">Description</label></div>
                     <div class="col-sm-9 text-break">
-                        <textarea id="description" name="description" class="form-control">{{ task.description }}</textarea>
+                        <textarea id="description" name="description" class="form-control" value="{{ task.description }}" >{{ task.description }} </textarea>
                         {% if errors.description %}<div class="invalid-feedback d-block">{{ errors.description }}</div>{% endif %}
                     </div>
                 </div>
@@ -52,20 +52,26 @@
                 <div class="row mb-3">
                     <div class="col-sm-3 fw-bold"><label for="created_at">Date Started</label></div>
                     <div class="col-sm-9">
-                        <input type="date" id="created_at" name="created_at" class="form-control">
+=                        <input type="date" id="created_at" name="created_at" class="form-control"
+                               value="{{ task.createdAt ? task.createdAt|date('Y-m-d') : '' }}">
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-sm-3 fw-bold"><label for="created_at">Date Completed</label></div>
+                    <div class="col-sm-3 fw-bold"><label for="completed_at">Date Completed</label></div>
                     <div class="col-sm-9">
-                        <input type="date" id="created_at" name="completed_at" class="form-control">
+=                        <input type="date" id="completed_at" name="completed_at" class="form-control"
+                               value="{{ task.completedAt ? task.completedAt|date('Y-m-d') : '' }}">
                     </div>
                 </div>
             </div>
 
             <div class="card-footer d-flex gap-2">
-                <input type="submit" value="Create" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+
+                <form method="POST" action="/tasks/{{ task.id }}/delete" onsubmit="return confirm('Really delete?');">
+                    <button type="submit" class="btn btn-danger">Delete Task</button>
+                </form>
             </div>
         </div>
     </form>

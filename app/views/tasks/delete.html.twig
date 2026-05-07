@@ -1,0 +1,12 @@
+{% extends "tasks/base.twig" %}
+
+{% set pageTitle = "Delete" %}
+
+{% block content %}
+    <h1>Home</h1>
+    <p>Welcome to delete page!</p>
+
+    <form method="POST" action="/tasks">
+        <input type="submit" class="btn btn-warning" name="DELETE">
+    </form>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "partials/base.html.twig" %}
+
+{% set pageTitle = "FAQ" %}
+
+{% block content %}
+    <main>
+        <header class="intro">
+            <h1 id="faq-title">Veelgestelde Vragen (FAQ)</h1>
+            <p>Hier staan korte, duidelijke antwoorden op veelvoorkomende vragen. Klik op een vraag om het antwoord te zien.</p>
+        </header>
+
+        <ul class="faq-list" role="list">
+            <li>
+                <details>
+                    <summary>
+                        <span>1. Hoe kan je printen op de HZ?</span>
+                        <span> - </span>
+                    </summary>
+                    <div>
+                        <p class="answer">Om te printen op de HZ moet je naar de website <a
+                                    href="https://hz.canon.nl/" target="_blank"
+                                    rel="noopener noreferrer">hz.canon.nl</a> gaan en inloggen met je HZ-gegevens.
+                            Vervolgens kun je je document uploaden en printen bij een van de printers op de HZ door je
+                            HZ-pas te scannen.</p>
+                    </div>
+                </details>
+            </li>
+
+            <li>
+                <details>
+                    <summary>
+                        <span>2. Hoe kan je een document scannen en versturen naar je HZ-mail?</span>
+                        <span> - </span>
+                    </summary>
+                    <div>
+                        <p class="answer">Log in op de printer met je HZ-pas, kies voor de optie 'Scannen' en
+                            vervolgens 'Scan naar e-mail'. Volg de instructies op het scherm.</p>
+                    </div>
+                </details>
+            </li>
+
+            <li>
+                <details>
+                    <summary>
+                        <span>3. Wat moet je doen als je je HZ-pas bent vergeten?</span>
+                        <span> - </span>
+                    </summary>
+                    <div>
+                        <p class="answer">Als je je HZ-pas bent vergeten, kun je bij de balie van de HZ een tijdelijke
+                            pas aanvragen of je legitimatiebewijs tonen om toegang te krijgen tot bepaalde faciliteiten.
+                            Voor printen kun je ook inloggen met je gebruikersnaam en wachtwoord op de printer zelf.</p>
+                    </div>
+                </details>
+            </li>
+
+            <li>
+                <details>
+                    <summary>
+                        <span>4. Hoe kan je een projectruimte reserveren?</span>
+                        <span> - </span>
+                    </summary>
+                    <div>
+                        <p class="answer">Het reserveren van projectruimes kan via deze link: <a
+                                    href="https://hzuniversity.topdesk.net/" target="_blank"
+                                    rel="noopener noreferrer">Topdesk</a>.
+                            Als het niet duidelijk is hoe, kan je hier de tutorial vinden:
+                            <a href="https://hzuniversity.topdesk.net/tas/public/ssp/content/detail/knowledgeitem?origin=knowledgeBaseTop10&unid=222efc2f5baa4a5ba75647c7bec4482a"
+                               target="_blank" rel="noopener noreferrer">Topdesk instructies</a>.
+                        </p>
+                    </div>
+                </details>
+            </li>
+
+            <li>
+                <details>
+                    <summary>
+                        <span>5. Wat zijn de instructies voor parkeren op de HZ-parkeerplaats?</span>
+                        <span> - </span>
+                    </summary>
+                    <div>
+                        <p class="answer">Eerst krijgt u een vergunning. Vervolgens kunt u de parkeerplaats van de HZ
+                            oprijden, je vergunning weergeven en zoek een studentenplek.</p>
+                    </div>
+                </details>
+            </li>
+        </ul>
+    </main>
+{% endblock %}

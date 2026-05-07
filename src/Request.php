@@ -33,6 +33,15 @@ class Request
 
     public function get(string $key): ?string
     {
-        return $this->routeParameters[$key] ?? null;
+        if (array_key_exists($key, $this->routeParameters)) {
+            return $this->routeParameters[$key];
+        }
+        if (array_key_exists($key, $this->postParameters)) {
+            return $this->postParameters[$key];
+        }
+        if (array_key_exists($key, $this->queryParameters)) {
+            return $this->queryParameters[$key];
+        }
+        return null;
     }
 }

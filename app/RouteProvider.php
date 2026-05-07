@@ -4,8 +4,8 @@ namespace App;
 
 use App\Controllers\HomeController;
 use App\Controllers\TaskController;
-use Framework\Router;
 use Framework\RouteProviderInterface;
+use Framework\Router;
 use Framework\ServiceContainer;
 
 class RouteProvider implements RouteProviderInterface
@@ -17,11 +17,14 @@ class RouteProvider implements RouteProviderInterface
     {
         $homeController = $container->get(HomeController::class);
         $router->addRoute('GET', '/', [$homeController, "index"]);
-        $router->addRoute('GET', '/about', [$homeController, "about"]);
+        $router->addRoute('GET', '/profile', [$homeController, "profile"]);
+        $router->addRoute('GET', '/dashboard', [$homeController, "dashboard"]);
+        $router->addRoute('GET', '/faq', [$homeController, "faq"]);
+        $router->addRoute('GET', '/blog', [$homeController, "blogIndex"]);
 
-        $taskController = $container->get(TaskController::class);
-        $router->addRoute('GET', '/tasks', [$taskController, "index"]);
-        $router->addRoute('GET', '/tasks/(?<id>\d+)', [$taskController, "show"]);
-        $router->addRoute('GET', '/tasks/create', [$taskController, "create"]);
+        // Dynamische blogpagina's
+        // Deze route vangt alles op zoals /blog/swot, /blog/studiekeuze, etc.
+        $router->addRoute('GET', '/blog/(?<slug>[a-zA-Z0-9_-]+)', [$homeController, "blogShow"]);
+
     }
 }

@@ -9,13 +9,11 @@ class Database
 {
     private PDO $connection;
 
-    private string $name;
-
     public function __construct(string $name)
     {
-        $this->name = $name;
-        $this->connection = new PDO("sqlite:" . $this->name);
+        $this->connection = new PDO("sqlite:" . $name);
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         $this->connection->exec('PRAGMA foreign_keys = ON;');
     }
 
@@ -44,6 +42,11 @@ class Database
     public function exec(string $sql): false|int
     {
         return $this->connection->exec($sql);
+    }
+
+    public function getLastID(string|null $field = null): int
+    {
+        return (int)$this->connection->lastInsertId($field);
     }
 
     public function migrate(string $migrationsDirectory): void
