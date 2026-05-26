@@ -11,11 +11,12 @@ class Database
 
     public function __construct(string $name)
     {
-        $host = getenv('DB_HOST') ?: 'mysql.railway.internal';
+        // Use ONLY getenv and fall back to null/standard defaults
+        $host = getenv('DB_HOST') ?: null;
         $port = getenv('DB_PORT') ?: '3306';
         $dbname = getenv('DB_DATABASE') ?: 'railway';
         $user = getenv('DB_USERNAME') ?: 'root';
-        $pass = getenv('DB_PASSWORD') ?: 'cmTTtqtqAHEkOhBTaqQhSiPEYXuUecTS';
+        $pass = getenv('DB_PASSWORD') ?: null; // REMOVED HARDCODED PASSWORD
 
         if ($host) {
             $dsn = sprintf(
