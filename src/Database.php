@@ -11,21 +11,20 @@ class Database
 
     public function __construct(string $name)
     {
-        // Use ONLY getenv and fall back to null/standard defaults
-        $host = getenv('DB_HOST') ?: null;
+        $host = getenv('DB_HOST');
         $port = getenv('DB_PORT') ?: '3306';
-        $dbname = getenv('DB_DATABASE') ?: 'railway';
+        $dbname = getenv('DB_DATABASE');
         $user = getenv('DB_USERNAME') ?: 'root';
-        $pass = getenv('DB_PASSWORD') ?: null; // REMOVED HARDCODED PASSWORD
+        $pass = getenv('DB_PASSWORD');
 
         if ($host) {
-            $dsn = sprintf(
-                'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
-                $host,
-                $port,
-                $dbname
-            );
-            $this->connection = new PDO($dsn, $user, $pass);
+            $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+            try {
+                $this->connection = new PDO($dsn, $user, $pass);
+            } catch (\PDOException $e) {
+                // This will tell us EXACTLY what it tried to use (except password for security)
+                throw new \PDOException("Failed connecting to $user@$host: " . $e->getMessage());
+            }
         } else {
             $this->connection = new PDO('sqlite:' . $name);
             $this->connection->exec('PRAGMA foreign_keys = ON;');
