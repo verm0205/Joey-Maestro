@@ -8,15 +8,14 @@ if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
 if ($argv[1] === 'migrate') {
     require 'vendor/autoload.php';
 
+    foreach (getenv() as $key => $value) {
+        $_ENV[$key] = $value;
+    }
+
     $config = array(
         'APP_ENV' => $_ENV['APP_ENV'] ?? 'development',
         'VIEWS_PATH' => 'app/views',
-        'APP_DB' => __DIR__ . '/database/database.sqlite',
-        'DB_HOST' => $_ENV['DB_HOST'] ?? null,
-        'DB_PORT' => $_ENV['DB_PORT'] ?? null,
-        'DB_DATABASE' => $_ENV['DB_DATABASE'] ?? null,
-        'DB_USERNAME' => $_ENV['DB_USERNAME'] ?? null,
-        'DB_PASSWORD' => $_ENV['DB_PASSWORD'] ?? null,
+        'APP_DB' => 'database/database.sqlite',
     );
 
     $kernel = new \Framework\Kernel($config);
