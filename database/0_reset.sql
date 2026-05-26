@@ -1,1 +1,2 @@
-DROP TABLE IF EXISTS tasks;
+USE railway;
+ROP TABLE IF EXISTS tasks;
