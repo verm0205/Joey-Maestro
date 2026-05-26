@@ -1,7 +1,7 @@
 {
   "name": "joey/maestro",
+  "description": "Joey Maestro task management application",
   "type": "framework",
-  "version": "0.1",
   "autoload": {
     "psr-4": {
       "Framework\\": "src/",
