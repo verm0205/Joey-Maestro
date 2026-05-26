@@ -1,6 +1,6 @@
 FROM php:apache
 
-# Cache bust: 1
+# Cache bust: 2
 RUN apt-get update && apt-get install -y git unzip
 
 RUN docker-php-ext-install pdo_mysql
