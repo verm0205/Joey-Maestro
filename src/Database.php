@@ -11,19 +11,16 @@ class Database
 
     public function __construct(string $name)
     {
-        $host = $_ENV['DB_HOST'] ?? null;
-
-        error_log("DB_HOST value: " . ($host ?? 'NULL'));
-        error_log("All ENV keys: " . implode(', ', array_keys($_ENV)));
+        $host = getenv('DB_HOST') ?: null;
 
         if ($host) {
             $dsn = sprintf(
                 'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
-                $_ENV['DB_HOST'],
-                $_ENV['DB_PORT'],
-                $_ENV['DB_DATABASE']
+                $host,
+                getenv('DB_PORT'),
+                getenv('DB_DATABASE')
             );
-            $this->connection = new PDO($dsn, $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD']);
+            $this->connection = new PDO($dsn, getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
         } else {
             $this->connection = new PDO('sqlite:' . $name);
             $this->connection->exec('PRAGMA foreign_keys = ON;');
@@ -32,7 +29,6 @@ class Database
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
     }
-
     public function query(string $query): PDOStatement | false
     {
         return $this->connection->query($query);

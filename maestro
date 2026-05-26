@@ -8,9 +8,6 @@ if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
 if ($argv[1] === 'migrate') {
     require 'vendor/autoload.php';
 
-    foreach (getenv() as $key => $value) {
-        $_ENV[$key] = $value;
-    }
 
     $config = array(
         'APP_ENV' => $_ENV['APP_ENV'] ?? 'development',
