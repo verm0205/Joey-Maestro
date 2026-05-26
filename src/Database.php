@@ -13,6 +13,9 @@ class Database
     {
         $host = $_ENV['DB_HOST'] ?? null;
 
+        error_log("DB_HOST value: " . ($host ?? 'NULL'));
+        error_log("All ENV keys: " . implode(', ', array_keys($_ENV)));
+
         if ($host) {
             $dsn = sprintf(
                 'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',

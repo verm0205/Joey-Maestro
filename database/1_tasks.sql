@@ -1,4 +1,3 @@
-USE railway;
 REATE TABLE tasks (
                        id INTEGER PRIMARY KEY AUTO_INCREMENT,
                        title TEXT,
