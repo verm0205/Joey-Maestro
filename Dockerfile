@@ -5,9 +5,7 @@ RUN docker-php-ext-install pdo_mysql
 RUN apt-get update && apt-get install -y git unzip
 
 # Enable mod_rewrite for clean URLs
-RUN a2enmod rewrite
-
-RUN a2dismod mpm_event mpm_worker && a2enmod mpm_prefork
+RUN a2dismod mpm_event && a2enmod mpm_prefork
 
 # Allow .htaccess to override Apache config (needed for routing)
 RUN sed -i 's|AllowOverride None|AllowOverride All|g' /etc/apache2/apache2.conf
