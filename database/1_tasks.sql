@@ -1,4 +1,4 @@
-REATE TABLE tasks (
+CREATE TABLE tasks (
                        id INTEGER PRIMARY KEY AUTO_INCREMENT,
                        title TEXT,
                        description TEXT,
