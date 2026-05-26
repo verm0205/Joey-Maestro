@@ -11,16 +11,20 @@ class Database
 
     public function __construct(string $name)
     {
-        $host = getenv('DB_HOST') ?: null;
+        $host = getenv('DB_HOST') ?: 'mysql.railway.internal';
+        $port = getenv('DB_PORT') ?: '3306';
+        $dbname = getenv('DB_DATABASE') ?: 'railway';
+        $user = getenv('DB_USERNAME') ?: 'root';
+        $pass = getenv('DB_PASSWORD') ?: 'ALmzpfmfmuYHlJrLlBPiOCRFoiaoNhEs';
 
         if ($host) {
             $dsn = sprintf(
                 'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
                 $host,
-                getenv('DB_PORT'),
-                getenv('DB_DATABASE')
+                $port,
+                $dbname
             );
-            $this->connection = new PDO($dsn, getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
+            $this->connection = new PDO($dsn, $user, $pass);
         } else {
             $this->connection = new PDO('sqlite:' . $name);
             $this->connection->exec('PRAGMA foreign_keys = ON;');
