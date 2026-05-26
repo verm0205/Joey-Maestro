@@ -11,11 +11,11 @@ class Database
 
     public function __construct(string $name)
     {
-        $host = getenv('DB_HOST') ?: 'mysql.railway.internal';
+        $host = getenv('DB_HOST') ?: null;
         $port = getenv('DB_PORT') ?: '3306';
         $dbname = getenv('DB_DATABASE') ?: 'railway';
         $user = getenv('DB_USERNAME') ?: 'root';
-        $pass = getenv('DB_PASSWORD') ?: 'ALmzpfmfmuYHlJrLlBPiOCRFoiaoNhEs';
+        $pass = getenv('DB_PASSWORD') ?: null;
 
         if ($host) {
             $dsn = sprintf(

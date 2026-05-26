@@ -142,7 +142,7 @@ DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
 5. In the **Joey-Maestro** service → **Settings** → **Deploy**, set the start command to:
 
 ```
-php maestro migrate && apache2-foreground
+sh -c "a2dismod mpm_event mpm_worker 2>/dev/null; a2enmod mpm_prefork 2>/dev/null; php maestro migrate; apache2-foreground"
 ```
 
 6. Railway will build the Docker image and deploy automatically.
