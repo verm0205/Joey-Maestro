@@ -49,12 +49,10 @@ class HomeController
         return $this->responseFactory->view('blog.html.twig', ['request' => $request]);
     }
 
-    public function blogShow(Request $request): Response
-    {
-        // We halen de 'slug' (bijv. 'swot') uit de route parameters
-        $slug = $request->getAttribute('slug');
-
-        // We checken of het bestand bestaat om fouten te voorkomen
-        return $this->responseFactory->view("blogs/{$slug}.html.twig", ['request' => $request]);
-    }
+//    public function blogShow(Request $request): Response
+//    {
+//        $slug = $request->getAttribute('slug');
+//
+//        return $this->responseFactory->view("blogs/{$slug}.html.twig", ['request' => $request]);
+//    }
 }

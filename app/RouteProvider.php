@@ -24,7 +24,7 @@ class RouteProvider implements RouteProviderInterface
 
         // Dynamische blogpagina's
         // Deze route vangt alles op zoals /blog/swot, /blog/studiekeuze, etc.
-        $router->addRoute('GET', '/blog/(?<slug>[a-zA-Z0-9_-]+)', [$homeController, "blogShow"]);
+        // $router->addRoute('GET', '/blog/(?<slug>[a-zA-Z0-9_-]+)', [$homeController, "blogShow"]);
 
     }
 }
