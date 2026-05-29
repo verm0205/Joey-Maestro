@@ -37,18 +37,18 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Grades — Live API Demo</h1>
-    <p>This page uses JavaScript <code>fetch()</code> to call the backend API and renders the data directly in the DOM — no page reload needed.</p>
+    <h1>Grades Live API</h1>
+    <p>This page uses JavaScript <code>fetch()</code> to call the backend API and renders the data directly in the DOM no page reload needed.</p>
 
     <section class="api-section">
-        <h2>All Grades <small>— <code>GET /api/grades</code></small></h2>
+        <h2>All Grades <small> <code>GET /api/grades</code></small></h2>
         <p id="status-msg">Loading…</p>
         <p id="error-msg">Failed to load grades. Please try again.</p>
         <div id="grade-list"></div>
     </section>
 
     <section class="api-section">
-        <h2>Single Grade <small>— <code>GET /api/grades/{id}</code></small></h2>
+        <h2>Single Grade <small> <code>GET /api/grades/{id}</code></small></h2>
         <div class="grade-find">
             <input type="number" id="grade-id-input" min="1" placeholder="ID" value="1">
             <button id="find-btn">find</button>
@@ -71,7 +71,7 @@
         function buildGradeCard(grade) {
             const statusLabel = STATUSES[grade.status]       ?? 'Onbekend';
             const statusClass = STATUS_CLASSES[grade.status] ?? 'badge-pending';
-            const cijfer      = grade.cijfer !== null ? grade.cijfer : '—';
+            const cijfer      = grade.cijfer !== null ? grade.cijfer : '-';
 
             const card = document.createElement('div');
             card.className = 'grade-card';

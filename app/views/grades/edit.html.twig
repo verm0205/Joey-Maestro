@@ -2,64 +2,68 @@
 {% set pageTitle = "Vak bewerken" %}
 
 {% block content %}
-<h1>Vak bewerken</h1>
+    <div class="form-container">
+        <h1>Vak bewerken</h1>
 
-<form method="POST" action="/grades/{{ grade.id }}/edit">
-    <div class="form-group">
-        <label for="quarter">Quarter</label>
-        <select name="quarter" id="quarter">
-            {% for q in ['Quarter 1','Quarter 2','Quarter 3','Quarter 4'] %}
-                <option value="{{ q }}" {{ grade.quarter == q ? 'selected' : '' }}>{{ q }}</option>
-            {% endfor %}
-        </select>
-        {% if errors is defined and errors.quarter is defined %}
-            <span class="error">{{ errors.quarter }}</span>
-        {% endif %}
+        <form method="POST" action="/grades/{{ grade.id }}/edit">
+            <div class="form-group">
+                <label for="quarter">Quarter</label>
+                <select name="quarter" id="quarter" class="form-control">
+                    {% for q in ['Quarter 1','Quarter 2','Quarter 3','Quarter 4'] %}
+                        <option value="{{ q }}" {{ grade.quarter == q ? 'selected' : '' }}>{{ q }}</option>
+                    {% endfor %}
+                </select>
+                {% if errors is defined and errors.quarter is defined %}
+                    <span class="error">{{ errors.quarter }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="course">Vak</label>
+                <input type="text" name="course" id="course" class="form-control" value="{{ grade.course }}">
+                {% if errors is defined and errors.course is defined %}
+                    <span class="error">{{ errors.course }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="ec">EC</label>
+                <input type="number" step="0.25" min="0" name="ec" id="ec" class="form-control" value="{{ grade.ec }}">
+                {% if errors is defined and errors.ec is defined %}
+                    <span class="error">{{ errors.ec }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="toetsing">Toetsvorm</label>
+                <input type="text" name="toetsing" id="toetsing" class="form-control" value="{{ grade.toetsing }}">
+                {% if errors is defined and errors.toetsing is defined %}
+                    <span class="error">{{ errors.toetsing }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="cijfer">Cijfer (optioneel)</label>
+                <input type="number" step="0.1" min="1" max="10" name="cijfer" id="cijfer" class="form-control"
+                       value="{{ grade.cijfer is not null ? grade.cijfer : '' }}">
+                {% if errors is defined and errors.cijfer is defined %}
+                    <span class="error">{{ errors.cijfer }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select name="status" id="status" class="form-control">
+                    <option value="0" {{ grade.status == 0 ? 'selected' : '' }}>In afwachting</option>
+                    <option value="1" {{ grade.status == 1 ? 'selected' : '' }}>Behaald</option>
+                    <option value="2" {{ grade.status == 2 ? 'selected' : '' }}>Opnieuw</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Opslaan</button>
+                <a href="/dashboard" class="btn btn-secondary">Annuleren</a>
+            </div>
+        </form>
     </div>
-
-    <div class="form-group">
-        <label for="course">Vak</label>
-        <input type="text" name="course" id="course" value="{{ grade.course }}">
-        {% if errors is defined and errors.course is defined %}
-            <span class="error">{{ errors.course }}</span>
-        {% endif %}
-    </div>
-
-    <div class="form-group">
-        <label for="ec">EC</label>
-        <input type="number" step="0.25" min="0" name="ec" id="ec" value="{{ grade.ec }}">
-        {% if errors is defined and errors.ec is defined %}
-            <span class="error">{{ errors.ec }}</span>
-        {% endif %}
-    </div>
-
-    <div class="form-group">
-        <label for="toetsing">Toetsvorm</label>
-        <input type="text" name="toetsing" id="toetsing" value="{{ grade.toetsing }}">
-        {% if errors is defined and errors.toetsing is defined %}
-            <span class="error">{{ errors.toetsing }}</span>
-        {% endif %}
-    </div>
-
-    <div class="form-group">
-        <label for="cijfer">Cijfer (optioneel)</label>
-        <input type="number" step="0.1" min="1" max="10" name="cijfer" id="cijfer"
-               value="{{ grade.cijfer is not null ? grade.cijfer : '' }}">
-        {% if errors is defined and errors.cijfer is defined %}
-            <span class="error">{{ errors.cijfer }}</span>
-        {% endif %}
-    </div>
-
-    <div class="form-group">
-        <label for="status">Status</label>
-        <select name="status" id="status">
-            <option value="0" {{ grade.status == 0 ? 'selected' : '' }}>In afwachting</option>
-            <option value="1" {{ grade.status == 1 ? 'selected' : '' }}>Behaald</option>
-            <option value="2" {{ grade.status == 2 ? 'selected' : '' }}>Opnieuw</option>
-        </select>
-    </div>
-
-    <button type="submit">Opslaan</button>
-    <a href="/dashboard">Annuleren</a>
-</form>
 {% endblock %}
