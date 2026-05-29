@@ -1,0 +1,143 @@
+{% extends "partials/base.html.twig" %}
+
+{% set pageTitle = "Grades API" %}
+
+{% block head %}
+    <style>
+        .api-section { margin-bottom: 2rem; }
+        .grade-card {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: #fff;
+        }
+        .grade-card h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+        .grade-card p  { margin: 0.2rem 0; color: #555; font-size: 0.875rem; }
+        .badge {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #fff;
+            margin-right: 0.4rem;
+        }
+        .badge-pending  { background: #6c757d; }
+        .badge-behaald  { background: #198754; }
+        .badge-opnieuw  { background: #dc3545; }
+        #status-msg { font-style: italic; color: #777; }
+        #error-msg  { color: #dc3545; font-weight: bold; display: none; }
+        .grade-find { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem; }
+        .grade-find input  { padding: 0.4rem 0.6rem; border: 1px solid #ccc; border-radius: 4px; width: 80px; }
+        .grade-find button { padding: 0.4rem 0.9rem; border: none; border-radius: 4px; background: #0d6efd; color: #fff; cursor: pointer; }
+        .grade-find button:hover { background: #0b5ed7; }
+        #single-result { margin-top: 0.5rem; }
+        .json-pre { background: #f8f9fa; padding: 1rem; border-radius: 6px; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Grades — Live API Demo</h1>
+    <p>This page uses JavaScript <code>fetch()</code> to call the backend API and renders the data directly in the DOM — no page reload needed.</p>
+
+    <section class="api-section">
+        <h2>All Grades <small>— <code>GET /api/grades</code></small></h2>
+        <p id="status-msg">Loading…</p>
+        <p id="error-msg">Failed to load grades. Please try again.</p>
+        <div id="grade-list"></div>
+    </section>
+
+    <section class="api-section">
+        <h2>Single Grade <small>— <code>GET /api/grades/{id}</code></small></h2>
+        <div class="grade-find">
+            <input type="number" id="grade-id-input" min="1" placeholder="ID" value="1">
+            <button id="find-btn">find</button>
+        </div>
+        <div id="single-result"></div>
+    </section>
+
+    <script>
+        const STATUSES      = ['In afwachting', 'Behaald', 'Opnieuw'];
+        const STATUS_CLASSES = ['badge-pending', 'badge-behaald', 'badge-opnieuw'];
+
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function buildGradeCard(grade) {
+            const statusLabel = STATUSES[grade.status]       ?? 'Onbekend';
+            const statusClass = STATUS_CLASSES[grade.status] ?? 'badge-pending';
+            const cijfer      = grade.cijfer !== null ? grade.cijfer : '—';
+
+            const card = document.createElement('div');
+            card.className = 'grade-card';
+            card.innerHTML = `
+        <h3>${escapeHtml(grade.course)}</h3>
+        <p><strong>Quarter:</strong> ${escapeHtml(grade.quarter)} &nbsp;|&nbsp; <strong>EC:</strong> ${escapeHtml(grade.ec)}</p>
+        <p><strong>Toetsing:</strong> ${escapeHtml(grade.toetsing)} &nbsp;|&nbsp; <strong>Cijfer:</strong> ${escapeHtml(cijfer)}</p>
+        <div style="margin-top:0.5rem">
+            <span class="badge ${statusClass}">${statusLabel}</span>
+        </div>
+    `;
+            return card;
+        }
+
+        // ─── Fetch all grades ────────────────────────────────────────────────────────
+
+        const statusMsg = document.getElementById('status-msg');
+        const errorMsg  = document.getElementById('error-msg');
+        const gradeList = document.getElementById('grade-list');
+
+        fetch('/api/grades')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (envelope) {
+                statusMsg.textContent = `${envelope.meta.total} grades loaded.`;
+                envelope.data.forEach(function (grade) {
+                    gradeList.appendChild(buildGradeCard(grade));
+                });
+            })
+            .catch(function (err) {
+                statusMsg.style.display = 'none';
+                errorMsg.style.display  = 'block';
+                console.error('API error:', err);
+            });
+
+        // ─── Fetch single grade ──────────────────────────────────────────────────────
+
+        document.getElementById('find-btn').addEventListener('click', function () {
+            const id     = document.getElementById('grade-id-input').value;
+            const result = document.getElementById('single-result');
+
+            result.innerHTML = '<p style="color:#777;font-style:italic">Loading…</p>';
+
+            fetch('/api/grades/' + encodeURIComponent(id))
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (envelope) {
+                    if (envelope.error) {
+                        result.innerHTML = `<p style="color:#dc3545"><strong>${envelope.error.status}</strong> — ${escapeHtml(envelope.error.message)}</p>`;
+                        return;
+                    }
+
+                    result.innerHTML = '';
+                    result.appendChild(buildGradeCard(envelope.data));
+
+                    const pre = document.createElement('pre');
+                    pre.className = 'json-pre';
+                    pre.textContent = JSON.stringify(envelope, null, 2);
+                    result.appendChild(pre);
+                })
+                .catch(function (err) {
+                    result.innerHTML = '<p style="color:#dc3545">Request failed. Check the console.</p>';
+                    console.error('find error:', err);
+                });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,200 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Models\Grade;
+use App\Repositories\GradeRepositoryInterface;
+use Framework\Request;
+use Framework\Response;
+use Framework\ResponseFactory;
+
+class GradeController
+{
+    private ResponseFactory $responseFactory;
+    private GradeRepositoryInterface $gradeRepository;
+
+    public function __construct(ResponseFactory $responseFactory, GradeRepositoryInterface $gradeRepository)
+    {
+        $this->responseFactory = $responseFactory;
+        $this->gradeRepository = $gradeRepository;
+    }
+
+    public function index(Request $request): Response
+    {
+        $grades = $this->gradeRepository->all();
+
+        $earnedEc = 0.0;
+
+        foreach ($grades as $grade) {
+            // If THIS specific row is 'Behaald' (1), add its EC to the total
+            if ((int) $grade->status === 1) {
+                $earnedEc += (float) $grade->ec;
+            }
+        }
+
+        return $this->responseFactory->view('dashboard.html.twig', [
+            'request'  => $request,
+            'grades'   => $grades,
+            'earnedEc' => $earnedEc,
+        ]);
+    }
+    public function create(Request $request): Response
+    {
+        return $this->responseFactory->view('grades/create.html.twig', [
+            'request' => $request,
+        ]);
+    }
+
+    public function store(Request $request): Response
+    {
+        $errors = [];
+
+        $quarter  = trim($request->get('quarter') ?? '');
+        $course   = trim($request->get('course') ?? '');
+        $ec       = $request->get('ec');
+        $toetsing = trim($request->get('toetsing') ?? '');
+        $cijfer   = $request->get('cijfer');
+        $status   = $request->get('status');
+
+        if ($quarter === '') {
+            $errors['quarter'] = 'Quarter is verplicht.';
+        }
+        if ($course === '') {
+            $errors['course'] = 'Vak is verplicht.';
+        }
+        if (!is_numeric($ec) || (float)$ec <= 0) {
+            $errors['ec'] = 'EC moet een positief getal zijn.';
+        }
+        if ($toetsing === '') {
+            $errors['toetsing'] = 'Toetsvorm is verplicht.';
+        }
+        if ($cijfer !== null && $cijfer !== '' && (!is_numeric($cijfer) || (float)$cijfer < 1 || (float)$cijfer > 10)) {
+            $errors['cijfer'] = 'Cijfer moet tussen 1 en 10 liggen.';
+        }
+        if (!in_array((int)$status, [0, 1, 2], true)) {
+            $errors['status'] = 'Ongeldige status.';
+        }
+
+        $grade           = new Grade();
+        $grade->quarter  = $quarter;
+        $grade->course   = $course;
+        $grade->ec       = (float)($ec ?? 0);
+        $grade->toetsing = $toetsing;
+        $grade->cijfer   = ($cijfer !== null && $cijfer !== '') ? (float)$cijfer : null;
+        $grade->status   = (int)($status ?? 0);
+
+        if (!empty($errors)) {
+            return $this->responseFactory->view('grades/create.html.twig', [
+                'request' => $request,
+                'errors'  => $errors,
+                'grade'   => $grade,
+            ]);
+        }
+
+        $result = $this->gradeRepository->insert($grade);
+        if ($result === null) {
+            return $this->responseFactory->internalError();
+        }
+
+        return $this->responseFactory->redirect('/dashboard');
+    }
+
+    public function edit(Request $request): Response
+    {
+        $id    = (int) $request->get('id');
+        $grade = $this->gradeRepository->find($id);
+
+        if ($grade === null) {
+            return $this->responseFactory->notFound();
+        }
+
+        return $this->responseFactory->view('grades/edit.html.twig', [
+            'request' => $request,
+            'grade'   => $grade,
+        ]);
+    }
+
+    public function update(Request $request): Response
+    {
+        $id    = (int) $request->get('id');
+        $grade = $this->gradeRepository->find($id);
+
+        if ($grade === null) {
+            return $this->responseFactory->notFound();
+        }
+
+        $errors = [];
+
+        $quarter  = trim($request->get('quarter') ?? '');
+        $course   = trim($request->get('course') ?? '');
+        $ec       = $request->get('ec');
+        $toetsing = trim($request->get('toetsing') ?? '');
+        $cijfer   = $request->get('cijfer');
+        $status   = $request->get('status');
+
+        if ($quarter === '') {
+            $errors['quarter'] = 'Quarter is verplicht.';
+        }
+        if ($course === '') {
+            $errors['course'] = 'Vak is verplicht.';
+        }
+        if (!is_numeric($ec) || (float)$ec <= 0) {
+            $errors['ec'] = 'EC moet een positief getal zijn.';
+        }
+        if ($toetsing === '') {
+            $errors['toetsing'] = 'Toetsvorm is verplicht.';
+        }
+        if ($cijfer !== null && $cijfer !== '' && (!is_numeric($cijfer) || (float)$cijfer < 1 || (float)$cijfer > 10)) {
+            $errors['cijfer'] = 'Cijfer moet tussen 1 en 10 liggen.';
+        }
+        if (!in_array((int)$status, [0, 1, 2], true)) {
+            $errors['status'] = 'Ongeldige status.';
+        }
+
+        $grade->quarter  = $quarter;
+        $grade->course   = $course;
+        $grade->ec       = (float)($ec ?? $grade->ec);
+        $grade->toetsing = $toetsing;
+        $grade->cijfer   = ($cijfer !== null && $cijfer !== '') ? (float)$cijfer : null;
+        $grade->status   = (int)($status ?? $grade->status);
+
+        if (!empty($errors)) {
+            return $this->responseFactory->view('grades/edit.html.twig', [
+                'request' => $request,
+                'errors'  => $errors,
+                'grade'   => $grade,
+            ]);
+        }
+
+        $this->gradeRepository->update($grade);
+        return $this->responseFactory->redirect('/dashboard');
+    }
+
+    public function deleteConfirm(Request $request): Response
+    {
+        $id    = (int) $request->get('id');
+        $grade = $this->gradeRepository->find($id);
+
+        if ($grade === null) {
+            return $this->responseFactory->notFound();
+        }
+
+        return $this->responseFactory->view('grades/delete.html.twig', [
+            'request' => $request,
+            'grade'   => $grade,
+        ]);
+    }
+
+    public function delete(Request $request): Response
+    {
+        $id    = (int) $request->get('id');
+        $grade = $this->gradeRepository->find($id);
+
+        if ($grade === null) {
+            return $this->responseFactory->notFound();
+        }
+
+        $this->gradeRepository->delete($grade);
+        return $this->responseFactory->redirect('/dashboard');
+    }
+}

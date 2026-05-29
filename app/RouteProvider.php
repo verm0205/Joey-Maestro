@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Controllers\ApiController;
+use App\Controllers\GradeController;
 use App\Controllers\HomeController;
 use App\Controllers\TaskController;
 use Framework\RouteProviderInterface;
@@ -16,14 +18,23 @@ class RouteProvider implements RouteProviderInterface
     public function register(Router $router, ServiceContainer $container): void
     {
         $homeController = $container->get(HomeController::class);
-        $router->addRoute('GET', '/', [$homeController, "index"]);
-        $router->addRoute('GET', '/profile', [$homeController, "profile"]);
-        $router->addRoute('GET', '/dashboard', [$homeController, "dashboard"]);
-        $router->addRoute('GET', '/faq', [$homeController, "faq"]);
-        $router->addRoute('GET', '/blog', [$homeController, "blogIndex"]);
+        $router->addRoute('GET', '/', fn($r) => $homeController->index($r));
+        $router->addRoute('GET', '/profile', fn($r) => $homeController->profile($r));
+        $router->addRoute('GET', '/faq', fn($r) => $homeController->faq($r));
+        $router->addRoute('GET', '/blog', fn($r) => $homeController->blogIndex($r));
+        $router->addRoute('GET', '/tasks-api', fn($r) => $homeController->tasksApi($r));
 
-        // Dynamische blogpagina's
-        // Deze route vangt alles op zoals /blog/swot, /blog/studiekeuze, etc.
-        // $router->addRoute('GET', '/blog/(?<slug>[a-zA-Z0-9_-]+)', [$homeController, "blogShow"]);
+        $gradeController = $container->get(GradeController::class);
+        $router->addRoute('GET',  '/dashboard',                         fn($r) => $gradeController->index($r));
+        $router->addRoute('GET',  '/grades/create',                     fn($r) => $gradeController->create($r));
+        $router->addRoute('POST', '/grades',                            fn($r) => $gradeController->store($r));
+        $router->addRoute('GET',  '/grades/(?<id>[0-9]+)/edit',         fn($r) => $gradeController->edit($r));
+        $router->addRoute('POST', '/grades/(?<id>[0-9]+)/edit',         fn($r) => $gradeController->update($r));
+        $router->addRoute('GET',  '/grades/(?<id>[0-9]+)/delete',       fn($r) => $gradeController->deleteConfirm($r));
+        $router->addRoute('POST', '/grades/(?<id>[0-9]+)/delete',       fn($r) => $gradeController->delete($r));
+
+        $apiController = $container->get(ApiController::class);
+        $router->addRoute('GET', '/api/grades',                fn($r) => $apiController->grades($r));
+        $router->addRoute('GET', '/api/grades/(?<id>[0-9]+)',  fn($r) => $apiController->grade($r));
     }
 }

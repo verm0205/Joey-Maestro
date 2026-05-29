@@ -2,8 +2,12 @@
 
 namespace App;
 
+use App\Controllers\ApiController;
+use App\Controllers\GradeController;
 use App\Controllers\HomeController;
 use App\Controllers\TaskController;
+use App\Repositories\GradeRepository;
+use App\Repositories\GradeRepositoryInterface;
 use App\Repositories\TaskRepository;
 use App\Repositories\TaskRepositoryInterface;
 use Exception;
@@ -20,16 +24,18 @@ class ServiceProvider implements ServiceProviderInterface
     public function register(ServiceContainer $container): void
     {
         $responseFactory = $container->get(ResponseFactory::class);
+        $database        = $container->get(Database::class);
 
-        $database = $container->get(Database::class);
-
-        $taskRepository = new TaskRepository($database);
-        $container->set(TaskRepositoryInterface::class, $taskRepository);
+        $gradeRepository = new GradeRepository($database);
+        $container->set(GradeRepositoryInterface::class, $gradeRepository);
 
         $homeController = new HomeController($responseFactory);
         $container->set(HomeController::class, $homeController);
 
-        $taskController = new TaskController($responseFactory, $taskRepository);
-        $container->set(TaskController::class, $taskController);
+        $gradeController = new GradeController($responseFactory, $gradeRepository);
+        $container->set(GradeController::class, $gradeController);
+
+        $apiController = new ApiController($responseFactory, $gradeRepository);
+        $container->set(ApiController::class, $apiController);
     }
 }

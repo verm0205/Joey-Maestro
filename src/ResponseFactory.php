@@ -73,4 +73,17 @@ class ResponseFactory
         $response->header = "Location: " . $url;
         return $response;
     }
+
+    /**
+     * @param array<mixed> $data
+     */
+    public function json(array $data, int $statusCode = 200): Response
+    {
+        $response = new Response();
+        $response->responseCode = $statusCode;
+        $response->header = "Content-Type: application/json";
+        $encoded = json_encode($data, JSON_PRETTY_PRINT);
+        $response->body = $encoded !== false ? $encoded : '{}';
+        return $response;
+    }
 }

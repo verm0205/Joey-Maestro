@@ -2,127 +2,63 @@
 
 {% set pageTitle = "Dashboard — Studievoortgang" %}
 
+{% set statusLabels = {0: 'In afwachting', 1: 'Behaald', 2: 'Opnieuw'} %}
+{% set statusClasses = {0: 'status-pending', 1: 'status-complete', 2: 'status-failed'} %}
+
 {% block content %}
     <header>
         <h1>Studievoortgang — Jaar 1</h1>
         <p>Overzicht van alle eerstejaars te behalen EC's en resultaten per component.</p>
     </header>
 
-    <main>
-        <section class="dashboard">
-            <table>
-                <thead>
-                <tr>
-                    <th>Quarter</th>
-                    <th>Course</th>
-                    <th>EC</th>
-                    <th>Toetsing</th>
-                    <th>Cijfer</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
+    <div style="margin-bottom: 1rem;">
+        <a href="/grades/create" class="btn-primary">+ Nieuw vak toevoegen</a>
+    </div>
 
-                <tbody>
-                <tr class="status-complete">
-                    <td>Quarter 1</td>
-                    <td>Program- & Career Orientation</td>
-                    <td>2.5</td>
-                    <td>Portfolio</td>
-                    <td>9.1</td>
-                    <td>Behaald</td>
+    <section class="dashboard">
+        <table>
+            <thead>
+            <tr>
+                <th>Quarter</th>
+                <th>Course</th>
+                <th>EC</th>
+                <th>Toetsing</th>
+                <th>Cijfer</th>
+                <th>Status</th>
+                <th>Acties</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for grade in grades %}
+                <tr class="{{ statusClasses[grade.status] }}">
+                    <td>{{ grade.quarter }}</td>
+                    <td>{{ grade.course }}</td>
+                    <td>{{ grade.ec }}</td>
+                    <td>{{ grade.toetsing }}</td>
+                    <td>{{ grade.cijfer is not null ? grade.cijfer : '—' }}</td>
+                    <td>{{ statusLabels[grade.status] }}</td>
+                    <td>
+                        <a href="/grades/{{ grade.id }}/edit">Bewerken</a>
+                        &nbsp;
+                        <a href="/grades/{{ grade.id }}/delete" style="color:#c0392b;">Verwijderen</a>
+                    </td>
                 </tr>
-                <tr class="status-complete">
-                    <td>Quarter 1</td>
-                    <td>Computer Science Basics</td>
-                    <td>5</td>
-                    <td>Written Exam</td>
-                    <td>7.2</td>
-                    <td>Behaald</td>
-                </tr>
-                <tr class="status-complete">
-                    <td>Quarter 1</td>
-                    <td>Programming Basics</td>
-                    <td>5</td>
-                    <td>Case Study</td>
-                    <td>8.5</td>
-                    <td>Behaald</td>
-                </tr>
+            {% else %}
+                <tr><td colspan="7" style="text-align:center;color:#888;">Geen vakken gevonden.</td></tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="3"><strong>Totaal behaalde EC's</strong></td>
+                <td colspan="4" class="nbsa">{{ earnedEc }} / 60 EC — NBSA grens: 45 EC</td>
+            </tr>
+            </tfoot>
+        </table>
 
-                <tr class="status-pending">
-                    <td rowspan="2">Quarter 2</td>
-                    <td rowspan="2">Object Oriented Programming</td>
-                    <td rowspan="2">10</td>
-                    <td>Criterium Toets</td>
-                    <td>—</td>
-                    <td>In afwachting</td>
-                </tr>
-                <tr class="status-pending">
-                    <td>Project</td>
-                    <td>—</td>
-                    <td>In afwachting</td>
-                </tr>
-
-                <tr class="status-pending">
-                    <td rowspan="4">Quarter 3</td>
-                    <td>Business Processes</td>
-                    <td>1.25</td>
-                    <td>Portfolio</td>
-                    <td>—</td>
-                    <td>In afwachting</td>
-                </tr>
-                <tr class="status-pending">
-                    <td>Computer Science Theory</td>
-                    <td>1.25</td>
-                    <td>Written Exam</td>
-                    <td>—</td>
-                    <td>In afwachting</td>
-                </tr>
-                <tr class="status-pending">
-                    <td rowspan="2">Framework Project 1</td>
-                    <td rowspan="2">10</td>
-                    <td>Criterium Toets</td>
-                    <td>—</td>
-                    <td>In afwachting</td>
-                </tr>
-                <tr class="status-pending">
-                    <td>Project</td>
-                    <td>—</td>
-                    <td>In afwachting</td>
-                </tr>
-
-                <tr class="status-pending">
-                    <td rowspan="3">Quarter 4</td>
-                    <td rowspan="3">Framework Project 2</td>
-                    <td rowspan="3">10</td>
-                    <td>Presentation (group)</td>
-                    <td>—</td>
-                    <td>In afwachting</td>
-                </tr>
-                <tr class="status-pending">
-                    <td>Portfolio</td>
-                    <td>—</td>
-                    <td>In afwachting</td>
-                </tr>
-                <tr class="status-pending">
-                    <td>Portfolio</td>
-                    <td>—</td>
-                    <td>In afwachting</td>
-                </tr>
-                </tbody>
-
-                <tfoot>
-                <tr>
-                    <td colspan="3"><strong>Totaal behaalde EC's</strong></td>
-                    <td colspan="3" class="nbsa">12.5 / 60 EC — NBSA grens: 45 EC</td>
-                </tr>
-                </tfoot>
-            </table>
-
-            <p style="margin-top:12px"><strong>Legenda:</strong>
-                <span class="status-complete" style="padding: 2px 8px; border-radius: 4px; margin-right: 5px;">Behaald</span>
-                <span class="status-pending" style="padding: 2px 8px; border-radius: 4px; margin-right: 5px;">In afwachting</span>
-                <span class="status-failed" style="padding: 2px 8px; border-radius: 4px;">Opnieuw</span>
-            </p>
-        </section>
-    </main>
+        <p style="margin-top:12px"><strong>Legenda:</strong>
+            <span class="status-complete" style="padding:2px 8px;border-radius:4px;margin-right:5px;">Behaald</span>
+            <span class="status-pending"  style="padding:2px 8px;border-radius:4px;margin-right:5px;">In afwachting</span>
+            <span class="status-failed"   style="padding:2px 8px;border-radius:4px;">Opnieuw</span>
+        </p>
+    </section>
 {% endblock %}

@@ -12,7 +12,7 @@ if ($argv[1] === 'migrate') {
     $config = array(
         'APP_ENV' => $_ENV['APP_ENV'] ?? 'development',
         'VIEWS_PATH' => 'app/views',
-        'APP_DB' => 'database/database.sqlite',
+        'APP_DB' => 'database.sqlite',
     );
 
     $kernel = new \Framework\Kernel($config);

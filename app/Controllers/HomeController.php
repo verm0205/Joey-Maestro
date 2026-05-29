@@ -49,6 +49,11 @@ class HomeController
         return $this->responseFactory->view('blog.html.twig', ['request' => $request]);
     }
 
+    public function tasksApi(Request $request): Response
+    {
+        return $this->responseFactory->view('grades-api.html.twig', ['request' => $request]);
+    }
+
 //    public function blogShow(Request $request): Response
 //    {
 //        $slug = $request->getAttribute('slug');
