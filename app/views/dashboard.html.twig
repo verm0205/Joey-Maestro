@@ -1,18 +1,18 @@
 {% extends "partials/base.html.twig" %}
 
-{% set pageTitle = "Dashboard — Studievoortgang" %}
+{% set pageTitle = "Dashboard Studievoortgang" %}
 
 {% set statusLabels = {0: 'In afwachting', 1: 'Behaald', 2: 'Opnieuw'} %}
 {% set statusClasses = {0: 'status-pending', 1: 'status-complete', 2: 'status-failed'} %}
 
 {% block content %}
     <header>
-        <h1>Studievoortgang — Jaar 1</h1>
+        <h1>Studievoortgang Jaar 1</h1>
         <p>Overzicht van alle eerstejaars te behalen EC's en resultaten per component.</p>
     </header>
 
-    <div style="margin-bottom: 1rem;">
-        <a href="/grades/create" class="btn-primary">+ Nieuw vak toevoegen</a>
+    <div style="margin-bottom: 1.5rem;">
+        <a href="/grades/create" class="btn btn-primary">+ Nieuw vak toevoegen</a>
     </div>
 
     <section class="dashboard">
@@ -35,12 +35,12 @@
                     <td>{{ grade.course }}</td>
                     <td>{{ grade.ec }}</td>
                     <td>{{ grade.toetsing }}</td>
-                    <td>{{ grade.cijfer is not null ? grade.cijfer : '—' }}</td>
+                    <td>{{ grade.cijfer is not null ? grade.cijfer : '-' }}</td>
                     <td>{{ statusLabels[grade.status] }}</td>
                     <td>
-                        <a href="/grades/{{ grade.id }}/edit">Bewerken</a>
+                        <a href="/grades/{{ grade.id }}/edit" class="btn btn-sm btn-outline">Bewerken</a>
                         &nbsp;
-                        <a href="/grades/{{ grade.id }}/delete" style="color:#c0392b;">Verwijderen</a>
+                        <a href="/grades/{{ grade.id }}/delete" class="btn btn-sm btn-danger">Verwijderen</a>
                     </td>
                 </tr>
             {% else %}
@@ -50,7 +50,7 @@
             <tfoot>
             <tr>
                 <td colspan="3"><strong>Totaal behaalde EC's</strong></td>
-                <td colspan="4" class="nbsa">{{ earnedEc }} / 60 EC — NBSA grens: 45 EC</td>
+                <td colspan="4" class="nbsa">{{ earnedEc }} / 60 EC - NBSA grens: 45 EC</td>
             </tr>
             </tfoot>
         </table>
