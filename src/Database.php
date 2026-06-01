@@ -15,8 +15,7 @@ class Database
         $port = getenv('DB_PORT') ?: '3306';
         $dbname = getenv('DB_DATABASE');
         $user = getenv('DB_USERNAME') ?: 'root';
-        $pass = getenv('DB_PASSWORD');
-
+        $pass = getenv('DB_PASSWORD') ?: null;
         if ($host) {
             $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
             try {
