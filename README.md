@@ -194,3 +194,8 @@ The workflow is defined in `.github/workflows/ci.yml`.
 | Run PHPStan | `vendor/bin/phpstan analyse --level=8` |
 | Run PHPCS | `vendor/bin/phpcs` |
 | Run Deptrac | `vendor/bin/deptrac analyse --no-progress` |
+
+
+
+
+auth = /?admin=1 of /?admin=0

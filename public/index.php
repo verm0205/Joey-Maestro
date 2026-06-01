@@ -8,6 +8,14 @@ use App\ServiceProvider;
 use Framework\Kernel;
 use Framework\Request;
 
+// Start session so we can track admin state
+session_start();
+
+// Dev toggle: visit /?admin=1 to become admin, /?admin=0 to stop
+if (isset($_GET['admin'])) {
+    $_SESSION['is_admin'] = $_GET['admin'] === '1';
+}
+
 $config = array(
     'APP_ENV' => 'development',
     'VIEWS_PATH' => 'app/views',

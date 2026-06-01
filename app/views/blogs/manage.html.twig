@@ -1,0 +1,60 @@
+{% extends "partials/base.html.twig" %}
+{% set pageTitle = "Manage Blog | " %}
+
+{% set statusLabels  = {'draft': 'Draft', 'published': 'Published', 'archived': 'Archived'} %}
+{% set statusClasses = {'draft': 'status-pending', 'published': 'status-complete', 'archived': 'status-failed'} %}
+
+{% block content %}
+    <header>
+        <h1>Manage Blog Posts</h1>
+        <p>Create, edit, publish, and delete your blog posts from here.</p>
+    </header>
+
+    <div style="margin-bottom: 1.5rem;">
+        <a href="/blog/create" class="btn btn-primary">+ New Post</a>
+        <a href="/blog" class="btn btn-secondary" style="margin-left: 0.5rem;">View Public Blog</a>
+    </div>
+
+    <section class="dashboard">
+        <table>
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Path</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Updated</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for post in posts %}
+                <tr class="{{ statusClasses[post.status] }}">
+                    <td>{{ post.title }}</td>
+                    <td><code>{{ post.path }}</code></td>
+                    <td>{{ statusLabels[post.status] }}</td>
+                    <td>{{ post.created_at|date('d-m-Y') }}</td>
+                    <td>{{ post.updated_at|date('d-m-Y') }}</td>
+                    <td>
+                        {% if post.status == 'published' %}
+                            <a href="/blog/{{ post.path }}" class="btn btn-sm btn-outline" target="_blank">View</a>
+                            &nbsp;
+                        {% endif %}
+                        <a href="/blog/{{ post.id }}/edit" class="btn btn-sm btn-outline">Edit</a>
+                        &nbsp;
+                        <a href="/blog/{{ post.id }}/delete" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6" style="text-align:center;color:#888;">No posts yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <p style="margin-top:12px"><strong>Legend:</strong>
+            <span class="status-complete" style="padding:2px 8px;border-radius:4px;margin-right:5px;">Published</span>
+            <span class="status-pending"  style="padding:2px 8px;border-radius:4px;margin-right:5px;">Draft</span>
+            <span class="status-failed"   style="padding:2px 8px;border-radius:4px;">Archived</span>
+        </p>
+    </section>
+{% endblock %}
