@@ -42,7 +42,7 @@ class RouteProvider implements RouteProviderInterface
         $router->addRoute('POST', '/blog/(?<id>[0-9]+)/edit', fn($r) => $blogController->update($r));
         $router->addRoute('GET', '/blog/(?<id>[0-9]+)/delete', fn($r) => $blogController->deleteConfirm($r));
         $router->addRoute('POST', '/blog/(?<id>[0-9]+)/delete', fn($r) => $blogController->delete($r));
-        $router->addRoute('GET', '/blog/(?<slug>[a-z0-9-]+)', fn($r) => $blogController->show($r));
+        $router->addRoute('GET', '/blog/(?<id>[0-9]+)', fn($r) => $blogController->show($r));
 
         $userController = $container->get(UserController::class);
         $router->addRoute('GET', '/login', fn($r) => $userController->loginForm($r));
