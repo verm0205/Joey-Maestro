@@ -33,24 +33,26 @@ class BlogController
     {
         $posts = $this->postRepository->allPublished();
 
-        return $this->responseFactory->view('blog/index.html.twig', [
+        return $this->responseFactory->view('blogs/index.html.twig', [
             'request' => $request,
             'posts'   => $posts,
+            'isAdmin' => $this->authService->isAdmin($this->session),
         ]);
     }
 
     public function show(Request $request): Response
     {
-        $path = $request->get('path') ?? '';
-        $post = $this->postRepository->findBySlug($path);
+        $id   = (int) $request->get('id');
+        $post = $this->postRepository->find($id);
 
         if ($post === null || $post->status !== 'published') {
             return $this->responseFactory->notFound();
         }
 
-        return $this->responseFactory->view('blog/show.html.twig', [
+        return $this->responseFactory->view('blogs/show.html.twig', [
             'request' => $request,
             'post'    => $post,
+            'isAdmin' => $this->authService->isAdmin($this->session),
         ]);
     }
 
@@ -62,7 +64,7 @@ class BlogController
 
         $posts = $this->postRepository->all();
 
-        return $this->responseFactory->view('blog/manage.html.twig', [
+        return $this->responseFactory->view('blogs/manage.html.twig', [
             'request' => $request,
             'posts'   => $posts,
         ]);
@@ -74,7 +76,7 @@ class BlogController
             return $this->responseFactory->redirect('/login');
         }
 
-        return $this->responseFactory->view('blog/create.html.twig', [
+        return $this->responseFactory->view('blogs/create.html.twig', [
             'request' => $request,
         ]);
     }
@@ -90,7 +92,6 @@ class BlogController
         $title  = trim($request->get('title') ?? '');
         $body   = trim($request->get('body') ?? '');
         $status = $request->get('status') ?? 'draft';
-        $path   = $this->generateSlug($title);
 
         if ($title === '') {
             $errors['title'] = 'Title is required.';
@@ -106,18 +107,13 @@ class BlogController
             $errors['status'] = 'Invalid status.';
         }
 
-        if ($path !== '' && $this->postRepository->pathExists($path)) {
-            $path = $path . '-' . time();
-        }
-
         $post         = new Post();
         $post->title  = $title;
-        $post->path   = $path;
         $post->body   = $body;
         $post->status = $status;
 
         if (!empty($errors)) {
-            return $this->responseFactory->view('blog/create.html.twig', [
+            return $this->responseFactory->view('blogs/create.html.twig', [
                 'request' => $request,
                 'errors'  => $errors,
                 'post'    => $post,
@@ -145,7 +141,7 @@ class BlogController
             return $this->responseFactory->notFound();
         }
 
-        return $this->responseFactory->view('blog/edit.html.twig', [
+        return $this->responseFactory->view('blogs/edit.html.twig', [
             'request' => $request,
             'post'    => $post,
         ]);
@@ -169,7 +165,6 @@ class BlogController
         $title  = trim($request->get('title') ?? '');
         $body   = trim($request->get('body') ?? '');
         $status = $request->get('status') ?? 'draft';
-        $path   = $this->generateSlug($title);
 
         if ($title === '') {
             $errors['title'] = 'Title is required.';
@@ -185,17 +180,12 @@ class BlogController
             $errors['status'] = 'Invalid status.';
         }
 
-        if ($path !== '' && $this->postRepository->pathExists($path, $id)) {
-            $path = $path . '-' . time();
-        }
-
         $post->title  = $title;
-        $post->path   = $path;
         $post->body   = $body;
         $post->status = $status;
 
         if (!empty($errors)) {
-            return $this->responseFactory->view('blog/edit.html.twig', [
+            return $this->responseFactory->view('blogs/edit.html.twig', [
                 'request' => $request,
                 'errors'  => $errors,
                 'post'    => $post,
@@ -219,7 +209,7 @@ class BlogController
             return $this->responseFactory->notFound();
         }
 
-        return $this->responseFactory->view('blog/delete.html.twig', [
+        return $this->responseFactory->view('blogs/delete.html.twig', [
             'request' => $request,
             'post'    => $post,
         ]);
@@ -240,13 +230,5 @@ class BlogController
 
         $this->postRepository->delete($post);
         return $this->responseFactory->redirect('/blog/manage');
-    }
-
-    private function generateSlug(string $title): string
-    {
-        $path = mb_strtolower(trim($title));
-        $path = preg_replace('/[^a-z0-9\s-]/', '', $path) ?? '';
-        $path = preg_replace('/[\s-]+/', '-', $path) ?? '';
-        return trim($path, '-');
     }
 }

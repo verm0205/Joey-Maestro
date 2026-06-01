@@ -20,7 +20,6 @@
             <thead>
             <tr>
                 <th>Title</th>
-                <th>Path</th>
                 <th>Status</th>
                 <th>Created</th>
                 <th>Updated</th>
@@ -31,13 +30,12 @@
             {% for post in posts %}
                 <tr class="{{ statusClasses[post.status] }}">
                     <td>{{ post.title }}</td>
-                    <td><code>{{ post.path }}</code></td>
                     <td>{{ statusLabels[post.status] }}</td>
                     <td>{{ post.created_at|date('d-m-Y') }}</td>
                     <td>{{ post.updated_at|date('d-m-Y') }}</td>
                     <td>
                         {% if post.status == 'published' %}
-                            <a href="/blog/{{ post.path }}" class="btn btn-sm btn-outline" target="_blank">View</a>
+                            <a href="/blog/{{ post.id }}" class="btn btn-sm btn-outline" target="_blank">View</a>
                             &nbsp;
                         {% endif %}
                         <a href="/blog/{{ post.id }}/edit" class="btn btn-sm btn-outline">Edit</a>
@@ -46,7 +44,7 @@
                     </td>
                 </tr>
             {% else %}
-                <tr><td colspan="6" style="text-align:center;color:#888;">No posts yet.</td></tr>
+                <tr><td colspan="5" style="text-align:center;color:#888;">No posts yet.</td></tr>
             {% endfor %}
             </tbody>
         </table>

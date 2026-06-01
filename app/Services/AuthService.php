@@ -27,6 +27,9 @@ class AuthService
             return null;
         }
 
+        // A07: Regenerate session ID on login to prevent session fixation
+        $session->regenerate();
+
         $session->set('user_id', (string) $user->id);
         $session->set('user_role', $user->role);
 
@@ -35,9 +38,16 @@ class AuthService
 
     public function logout(Session $session): void
     {
+        // A07: Regenerate session ID on logout too
+        $session->regenerate();
         $session->destroy();
     }
 
+    /**
+     * Re-fetches the user from the DB on every request.
+     * This is the constant session check — if the user was deleted or
+     * their role was changed, they lose access immediately (A01).
+     */
     public function getLoggedInUser(Session $session): ?User
     {
         $userId = $session->get('user_id');
@@ -46,16 +56,32 @@ class AuthService
             return null;
         }
 
-        return $this->userRepository->findById((int) $userId);
+        // A01: Always verify against DB, never trust session role value alone
+        $user = $this->userRepository->findById((int) $userId);
+
+        // If user no longer exists in DB, invalidate the session
+        if ($user === null) {
+            $session->destroy();
+            return null;
+        }
+
+        // Keep session role in sync with DB
+        $session->set('user_role', $user->role);
+
+        return $user;
     }
 
+    /**
+     * A01: Checks admin role by re-fetching from DB, not just reading session.
+     */
     public function isAdmin(Session $session): bool
     {
-        return $session->get('user_role') === 'admin';
+        $user = $this->getLoggedInUser($session);
+        return $user !== null && $user->role === 'admin';
     }
 
     public function isLoggedIn(Session $session): bool
     {
-        return $session->get('user_id') !== null;
+        return $this->getLoggedInUser($session) !== null;
     }
 }

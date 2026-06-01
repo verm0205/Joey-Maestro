@@ -26,6 +26,11 @@ class Session
         unset($_SESSION[$key]);
     }
 
+    public function regenerate(): void
+    {
+        session_regenerate_id(true);
+    }
+
     public function destroy(): void
     {
         $_SESSION = [];

@@ -44,24 +44,13 @@ class PostRepository implements PostRepositoryInterface
         return $row ? $this->fromRow($row) : null;
     }
 
-    public function findByPath(string $path): ?Post
-    {
-        $row = $this->database->run(
-            'SELECT * FROM posts WHERE path = :path',
-            ['path' => $path]
-        )->fetch();
-
-        return $row ? $this->fromRow($row) : null;
-    }
-
     public function insert(Post $post): ?Post
     {
         $stmt = $this->database->run(
-            'INSERT INTO posts (title, path, body, status, created_at, updated_at)
-             VALUES (:title, :path, :body, :status, NOW(), NOW())',
+            'INSERT INTO posts (title, body, status)
+             VALUES (:title, :body, :status)',
             [
                 'title'  => $post->title,
-                'path'   => $post->path,
                 'body'   => $post->body,
                 'status' => $post->status,
             ]
@@ -79,12 +68,10 @@ class PostRepository implements PostRepositoryInterface
     {
         $this->database->run(
             'UPDATE posts
-             SET title = :title, path = :path, body = :body,
-                 status = :status, updated_at = NOW()
+             SET title = :title, body = :body, status = :status
              WHERE id = :id',
             [
                 'title'  => $post->title,
-                'path'   => $post->path,
                 'body'   => $post->body,
                 'status' => $post->status,
                 'id'     => $post->id,
@@ -104,29 +91,11 @@ class PostRepository implements PostRepositoryInterface
         return $stmt->rowCount() > 0;
     }
 
-    public function pathExists(string $path, ?int $excludeId = null): bool
-    {
-        if ($excludeId !== null) {
-            $row = $this->database->run(
-                'SELECT id FROM posts WHERE path = :path AND id != :id',
-                ['path' => $path, 'id' => $excludeId]
-            )->fetch();
-        } else {
-            $row = $this->database->run(
-                'SELECT id FROM posts WHERE path = :path',
-                ['path' => $path]
-            )->fetch();
-        }
-
-        return $row !== false;
-    }
-
     private function fromRow(mixed $row): Post
     {
         $post             = new Post();
         $post->id         = (int) $row->id;
         $post->title      = $row->title;
-        $post->path       = $row->path;
         $post->body       = $row->body;
         $post->status     = $row->status;
         $post->created_at = $row->created_at;
