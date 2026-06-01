@@ -18,6 +18,11 @@ class ResponseFactory
         $this->twig = $twig;
     }
 
+    public function addGlobal(string $name, mixed $value): void
+    {
+        $this->twig->addGlobal($name, $value);
+    }
+
     /**
      * @param string $view
      * @param array<mixed> $context

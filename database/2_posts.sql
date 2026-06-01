@@ -1,13 +1,11 @@
-DROP TABLE IF EXISTS posts;
-
 CREATE TABLE posts (
-   id         INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   title      VARCHAR(255) NOT NULL,
-   path       VARCHAR(255) NOT NULL UNIQUE,
-   body       TEXT         NOT NULL,
-   status     ENUM('draft','published','archived') NOT NULL DEFAULT 'draft',
-   created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   updated_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+       id         INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+       title      VARCHAR(255) NOT NULL,
+       path       VARCHAR(255) NOT NULL UNIQUE,
+       body       TEXT         NOT NULL,
+       status     ENUM('draft','published','archived') NOT NULL DEFAULT 'draft',
+       created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+       updated_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 INSERT INTO posts (title, path, body, status, created_at, updated_at) VALUES

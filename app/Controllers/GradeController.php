@@ -4,19 +4,29 @@ namespace App\Controllers;
 
 use App\Models\Grade;
 use App\Repositories\GradeRepositoryInterface;
+use App\Services\AuthService;
 use Framework\Request;
 use Framework\Response;
 use Framework\ResponseFactory;
+use Framework\Session;
 
 class GradeController
 {
     private ResponseFactory $responseFactory;
     private GradeRepositoryInterface $gradeRepository;
+    private AuthService $authService;
+    private Session $session;
 
-    public function __construct(ResponseFactory $responseFactory, GradeRepositoryInterface $gradeRepository)
-    {
+    public function __construct(
+        ResponseFactory $responseFactory,
+        GradeRepositoryInterface $gradeRepository,
+        AuthService $authService,
+        Session $session
+    ) {
         $this->responseFactory = $responseFactory;
         $this->gradeRepository = $gradeRepository;
+        $this->authService     = $authService;
+        $this->session         = $session;
     }
 
     public function index(Request $request): Response
@@ -24,9 +34,7 @@ class GradeController
         $grades = $this->gradeRepository->all();
 
         $earnedEc = 0.0;
-
         foreach ($grades as $grade) {
-            // If THIS specific row is 'Behaald' (1), add its EC to the total
             if ((int) $grade->status === 1) {
                 $earnedEc += (float) $grade->ec;
             }
@@ -38,8 +46,13 @@ class GradeController
             'earnedEc' => $earnedEc,
         ]);
     }
+
     public function create(Request $request): Response
     {
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
         return $this->responseFactory->view('grades/create.html.twig', [
             'request' => $request,
         ]);
@@ -47,6 +60,10 @@ class GradeController
 
     public function store(Request $request): Response
     {
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
         $errors = [];
 
         $quarter  = trim($request->get('quarter') ?? '');
@@ -101,6 +118,10 @@ class GradeController
 
     public function edit(Request $request): Response
     {
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
         $id    = (int) $request->get('id');
         $grade = $this->gradeRepository->find($id);
 
@@ -116,6 +137,10 @@ class GradeController
 
     public function update(Request $request): Response
     {
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
         $id    = (int) $request->get('id');
         $grade = $this->gradeRepository->find($id);
 
@@ -172,6 +197,10 @@ class GradeController
 
     public function deleteConfirm(Request $request): Response
     {
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
         $id    = (int) $request->get('id');
         $grade = $this->gradeRepository->find($id);
 
@@ -187,6 +216,10 @@ class GradeController
 
     public function delete(Request $request): Response
     {
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
         $id    = (int) $request->get('id');
         $grade = $this->gradeRepository->find($id);
 

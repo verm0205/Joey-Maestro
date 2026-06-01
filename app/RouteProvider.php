@@ -6,6 +6,7 @@ use App\Controllers\ApiController;
 use App\Controllers\BlogController;
 use App\Controllers\GradeController;
 use App\Controllers\HomeController;
+use App\Controllers\UserController;
 use Framework\RouteProviderInterface;
 use Framework\Router;
 use Framework\ServiceContainer;
@@ -41,7 +42,12 @@ class RouteProvider implements RouteProviderInterface
         $router->addRoute('POST', '/blog/(?<id>[0-9]+)/edit', fn($r) => $blogController->update($r));
         $router->addRoute('GET', '/blog/(?<id>[0-9]+)/delete', fn($r) => $blogController->deleteConfirm($r));
         $router->addRoute('POST', '/blog/(?<id>[0-9]+)/delete', fn($r) => $blogController->delete($r));
-        $router->addRoute('GET', '/blog/(?<path>[a-z0-9-]+)', fn($r) => $blogController->show($r));
+        $router->addRoute('GET', '/blog/(?<slug>[a-z0-9-]+)', fn($r) => $blogController->show($r));
+
+        $userController = $container->get(UserController::class);
+        $router->addRoute('GET', '/login', fn($r) => $userController->loginForm($r));
+        $router->addRoute('POST', '/login', fn($r) => $userController->login($r));
+        $router->addRoute('POST', '/logout', fn($r) => $userController->logout($r));
 
         $apiController = $container->get(ApiController::class);
         $router->addRoute('GET', '/api/grades', fn($r) => $apiController->grades($r));

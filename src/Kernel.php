@@ -29,6 +29,9 @@ class Kernel
         $database = new Database(__DIR__ . '/../' . $dbName);
         $this->container->set(Database::class, $database);
 
+        $session = new Session();
+        $this->container->set(Session::class, $session);
+
         $this->router = new Router($responseFactory);
     }
 
@@ -40,14 +43,23 @@ class Kernel
     public function registerServices(ServiceProviderInterface $serviceProvider): void
     {
         $serviceProvider->register($this->container);
+
+        // After services are registered, inject the logged-in user as a Twig global
+        // so every view can access {{ currentUser }}
+        $session         = $this->container->get(Session::class);
+        $responseFactory = $this->container->get(ResponseFactory::class);
+
+        $userId = $session->get('user_id');
+        if ($userId !== null) {
+            /** @var \App\Repositories\UserRepositoryInterface $userRepo */
+            $userRepo    = $this->container->get(\App\Repositories\UserRepositoryInterface::class);
+            $currentUser = $userRepo->findById((int) $userId);
+            $responseFactory->addGlobal('currentUser', $currentUser);
+        } else {
+            $responseFactory->addGlobal('currentUser', null);
+        }
     }
 
-    /**
-     * Handle the incoming Request and produce a Response.
-     *
-     * @param Request $request
-     * @return Response
-     */
     public function handle(Request $request): Response
     {
         return $this->router->dispatch($request);

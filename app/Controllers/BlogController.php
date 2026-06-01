@@ -4,74 +4,93 @@ namespace App\Controllers;
 
 use App\Models\Post;
 use App\Repositories\PostRepositoryInterface;
+use App\Services\AuthService;
 use Framework\Request;
 use Framework\Response;
 use Framework\ResponseFactory;
+use Framework\Session;
 
 class BlogController
 {
     private ResponseFactory $responseFactory;
     private PostRepositoryInterface $postRepository;
+    private AuthService $authService;
+    private Session $session;
 
-    public function __construct(ResponseFactory $responseFactory, PostRepositoryInterface $postRepository)
-    {
+    public function __construct(
+        ResponseFactory $responseFactory,
+        PostRepositoryInterface $postRepository,
+        AuthService $authService,
+        Session $session
+    ) {
         $this->responseFactory = $responseFactory;
         $this->postRepository  = $postRepository;
+        $this->authService     = $authService;
+        $this->session         = $session;
     }
 
     public function index(Request $request): Response
     {
         $posts = $this->postRepository->allPublished();
 
-        return $this->responseFactory->view('blogs/index.html.twig', [
+        return $this->responseFactory->view('blog/index.html.twig', [
             'request' => $request,
             'posts'   => $posts,
-            'isAdmin' => $_SESSION['is_admin'] ?? false,
         ]);
     }
 
     public function show(Request $request): Response
     {
-        $urlPath = $request->get('path') ?? '';
-        $post = $this->postRepository->findByPath($urlPath);
+        $path = $request->get('path') ?? '';
+        $post = $this->postRepository->findBySlug($path);
 
         if ($post === null || $post->status !== 'published') {
             return $this->responseFactory->notFound();
         }
 
-        return $this->responseFactory->view('blogs/show.html.twig', [
+        return $this->responseFactory->view('blog/show.html.twig', [
             'request' => $request,
             'post'    => $post,
-            'isAdmin' => $_SESSION['is_admin'] ?? false,
         ]);
     }
 
     public function manage(Request $request): Response
     {
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
         $posts = $this->postRepository->all();
 
-        return $this->responseFactory->view('blogs/manage.html.twig', [
+        return $this->responseFactory->view('blog/manage.html.twig', [
             'request' => $request,
             'posts'   => $posts,
-            'isAdmin' => $_SESSION['is_admin'] ?? false,
         ]);
     }
 
     public function create(Request $request): Response
     {
-        return $this->responseFactory->view('blogs/create.html.twig', [
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
+        return $this->responseFactory->view('blog/create.html.twig', [
             'request' => $request,
         ]);
     }
 
     public function store(Request $request): Response
     {
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
         $errors = [];
 
         $title  = trim($request->get('title') ?? '');
         $body   = trim($request->get('body') ?? '');
         $status = $request->get('status') ?? 'draft';
-        $path   = $this->generateUrlPath($title);
+        $path   = $this->generateSlug($title);
 
         if ($title === '') {
             $errors['title'] = 'Title is required.';
@@ -98,7 +117,7 @@ class BlogController
         $post->status = $status;
 
         if (!empty($errors)) {
-            return $this->responseFactory->view('blogs/create.html.twig', [
+            return $this->responseFactory->view('blog/create.html.twig', [
                 'request' => $request,
                 'errors'  => $errors,
                 'post'    => $post,
@@ -115,6 +134,10 @@ class BlogController
 
     public function edit(Request $request): Response
     {
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
         $id   = (int) $request->get('id');
         $post = $this->postRepository->find($id);
 
@@ -122,7 +145,7 @@ class BlogController
             return $this->responseFactory->notFound();
         }
 
-        return $this->responseFactory->view('blogs/edit.html.twig', [
+        return $this->responseFactory->view('blog/edit.html.twig', [
             'request' => $request,
             'post'    => $post,
         ]);
@@ -130,6 +153,10 @@ class BlogController
 
     public function update(Request $request): Response
     {
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
         $id   = (int) $request->get('id');
         $post = $this->postRepository->find($id);
 
@@ -142,7 +169,7 @@ class BlogController
         $title  = trim($request->get('title') ?? '');
         $body   = trim($request->get('body') ?? '');
         $status = $request->get('status') ?? 'draft';
-        $path   = $this->generateUrlPath($title);
+        $path   = $this->generateSlug($title);
 
         if ($title === '') {
             $errors['title'] = 'Title is required.';
@@ -168,7 +195,7 @@ class BlogController
         $post->status = $status;
 
         if (!empty($errors)) {
-            return $this->responseFactory->view('blogs/edit.html.twig', [
+            return $this->responseFactory->view('blog/edit.html.twig', [
                 'request' => $request,
                 'errors'  => $errors,
                 'post'    => $post,
@@ -181,6 +208,10 @@ class BlogController
 
     public function deleteConfirm(Request $request): Response
     {
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
         $id   = (int) $request->get('id');
         $post = $this->postRepository->find($id);
 
@@ -188,7 +219,7 @@ class BlogController
             return $this->responseFactory->notFound();
         }
 
-        return $this->responseFactory->view('blogs/delete.html.twig', [
+        return $this->responseFactory->view('blog/delete.html.twig', [
             'request' => $request,
             'post'    => $post,
         ]);
@@ -196,6 +227,10 @@ class BlogController
 
     public function delete(Request $request): Response
     {
+        if (!$this->authService->isAdmin($this->session)) {
+            return $this->responseFactory->redirect('/login');
+        }
+
         $id   = (int) $request->get('id');
         $post = $this->postRepository->find($id);
 
@@ -207,7 +242,7 @@ class BlogController
         return $this->responseFactory->redirect('/blog/manage');
     }
 
-    private function generateUrlPath(string $title): string
+    private function generateSlug(string $title): string
     {
         $path = mb_strtolower(trim($title));
         $path = preg_replace('/[^a-z0-9\s-]/', '', $path) ?? '';
