@@ -20,7 +20,6 @@ class RouteProvider implements RouteProviderInterface
     {
         $homeController = $container->get(HomeController::class);
         $router->addRoute('GET', '/', fn($r) => $homeController->index($r));
-        $router->addRoute('GET', '/profile', fn($r) => $homeController->profile($r));
         $router->addRoute('GET', '/faq', fn($r) => $homeController->faq($r));
         $router->addRoute('GET', '/tasks-api', fn($r) => $homeController->tasksApi($r));
 
@@ -50,6 +49,11 @@ class RouteProvider implements RouteProviderInterface
         $router->addRoute('GET', '/login', fn($r) => $userController->loginForm($r));
         $router->addRoute('POST', '/login', fn($r) => $userController->login($r));
         $router->addRoute('POST', '/logout', fn($r) => $userController->logout($r));
+
+        $profileController = $container->get(\App\Controllers\ProfileController::class);
+        $router->addRoute('GET', '/profiles', fn($r) => $profileController->show($r));
+        $router->addRoute('GET', '/profiles/edit', fn($r) => $profileController->edit($r));
+        $router->addRoute('POST', '/profiles/edit', fn($r) => $profileController->update($r));
 
         $apiController = $container->get(ApiController::class);
         $router->addRoute('GET', '/api/grades', fn($r) => $apiController->grades($r));
