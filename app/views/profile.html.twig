@@ -1,50 +1,27 @@
 {% extends "partials/base.html.twig" %}
-
-{% set pageTitle = "Mijn Profiel" %}
+{% set pageTitle = "Profiel" %}
 
 {% block content %}
-    <header>
-        <h1>Profiel</h1>
-        <p>Welkom op mijn introductiepagina.</p>
-    </header>
+    <h1>Profiel</h1>
 
-    <article class="profile">
-        <img src="/img/joeypfp.jpg" alt="Joey Vermeulen" style="float:left; width:140px; margin-right: 20px; border-radius: var(--radius);">
+    {% if session.get('user') %}
+        <a href="/profile/edit" class="btn btn-primary">Profiel bewerken</a>
+    {% endif %}
 
-        <h2>Wie ben ik?</h2>
-        <p>
-            Ik ben Joey Vermeulen, 19 jaar oud en ik woon in 's-Gravenpolder.
-            Mijn hobby's zijn gamen, afspreken met vrienden en natuurlijk programmeren.
-            Ik heb voor deze opleiding gekozen omdat ik al een tijdje bezig ben met programmeren en
-            ik me hier verder in wil verdiepen.
-        </p>
+    <h2>Wie ben ik?</h2>
+    <p>{{ profile.about_me }}</p>
 
-        <div style="clear: both; padding-top: 20px;">
-            <article>
-                <h3>Persoonlijke Kenmerken & Skills</h3>
-                <p class="post-meta">Wat typeert mij als student</p>
-                <ul>
-                    <li><strong>Leergierig:</strong> Ik sta altijd open voor nieuwe technologieën.</li>
-                    <li><strong>Doorzettingsvermogen:</strong> Ik stop pas als een bug is opgelost.</li>
-                    <li><strong>Teamspeler:</strong> Samenwerken aan code vind ik het leukst.</li>
-                    <li><strong>Talen:</strong> HTML, CSS, JavaScript en PHP (Maestro Framework).</li>
-                </ul>
-            </article>
-        </div>
+    <h2>Persoonlijke Kenmerken & Skills</h2>
+    <ul>
+        <li><strong>Leergierig:</strong> {{ profile.eager_to_learn }}</li>
+        <li><strong>Doorzettingsvermogen:</strong> {{ profile.perseverance }}</li>
+        <li><strong>Teamspeler:</strong> {{ profile.team_player }}</li>
+        <li><strong>Talen:</strong> {{ profile.languages }}</li>
+    </ul>
 
-        <article style="margin-top: 30px;">
-            <h2>Contact / Links</h2>
-            <p class="post-meta">Handige links en contactgegevens</p>
-            <aside class="aside-menu" aria-label="Links relevant voor studie">
-                <h3>Belangrijke bronnen</h3>
-                <ul>
-                    <li><strong>GitHub:</strong> <a href="https://github.com/verm0205" target="_blank" rel="noopener noreferrer">github.com/verm0205</a></li>
-                    <li><strong>HZ University:</strong> <a href="https://www.hz.nl/" target="_blank" rel="noopener noreferrer">hz.nl</a></li>
-                    <li><strong>Email:</strong> <a href="mailto:verm0205@hz.nl">verm0205@hz.nl</a></li>
-                    <li><strong>HZ CER:</strong> <a href="https://oer.hz.nl/" target="_blank" rel="noopener noreferrer">Course & Examination Regulations</a></li>
-                    <li><strong>Learn:</strong> <a href="https://learn.hz.nl" target="_blank" rel="noopener noreferrer">HZ Learn Omgeving</a></li>
-                </ul>
-            </aside>
-        </article>
-    </article>
+    <h2>Contact / Links</h2>
+    <ul>
+        <li><strong>GitHub:</strong> <a href="https://{{ profile.github_url }}">{{ profile.github_url }}</a></li>
+        <li><strong>Email:</strong> <a href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>
+    </ul>
 {% endblock %}

@@ -41,6 +41,9 @@ class ServiceProvider implements ServiceProviderInterface
         $userRepository = new UserRepository($database);
         $container->set(UserRepositoryInterface::class, $userRepository);
 
+        $profileRepository = new \App\Repositories\ProfileRepository($database);
+        $container->set(\App\Repositories\ProfileRepositoryInterface::class, $profileRepository);
+
         $authService = new AuthService($userRepository);
         $container->set(AuthService::class, $authService);
 
@@ -58,5 +61,8 @@ class ServiceProvider implements ServiceProviderInterface
 
         $apiController = new ApiController($responseFactory, $gradeRepository);
         $container->set(ApiController::class, $apiController);
+
+        $profileController = new \App\Controllers\ProfileController($responseFactory, $profileRepository, $authService, $session);
+        $container->set(\App\Controllers\ProfileController::class, $profileController);
     }
 }
