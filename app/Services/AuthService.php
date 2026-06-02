@@ -15,6 +15,13 @@ class AuthService
         $this->userRepository = $userRepository;
     }
 
+    public function register(User $user, string $password): ?User
+    {
+        // A07: Hash password with bcrypt before storing
+        $user->password = password_hash($password, PASSWORD_BCRYPT);
+        return $this->userRepository->insert($user);
+    }
+
     public function login(string $username, string $password, Session $session): ?User
     {
         $user = $this->userRepository->findByUsername($username);
@@ -45,8 +52,7 @@ class AuthService
 
     /**
      * Re-fetches the user from the DB on every request.
-     * This is the constant session check — if the user was deleted or
-     * their role was changed, they lose access immediately (A01).
+     * Constant session check — if user deleted or role changed, access is revoked immediately (A01).
      */
     public function getLoggedInUser(Session $session): ?User
     {
@@ -59,7 +65,6 @@ class AuthService
         // A01: Always verify against DB, never trust session role value alone
         $user = $this->userRepository->findById((int) $userId);
 
-        // If user no longer exists in DB, invalidate the session
         if ($user === null) {
             $session->destroy();
             return null;
@@ -71,9 +76,6 @@ class AuthService
         return $user;
     }
 
-    /**
-     * A01: Checks admin role by re-fetching from DB, not just reading session.
-     */
     public function isAdmin(Session $session): bool
     {
         $user = $this->getLoggedInUser($session);

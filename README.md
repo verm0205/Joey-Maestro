@@ -197,5 +197,3 @@ The workflow is defined in `.github/workflows/ci.yml`.
 
 
 
-
-auth = /?admin=1 of /?admin=0
