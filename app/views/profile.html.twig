@@ -9,7 +9,7 @@
             <p>Welkom op mijn introductiepagina.</p>
         </div>
 
-        {% if session.get('user') %}
+        {% if session.get('user_role') == 'admin' %}
             <a href="/profile/edit" class="btn btn-primary" style="margin-left: auto;">Profiel bewerken</a>
         {% endif %}
     </header>

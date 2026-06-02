@@ -34,7 +34,7 @@ class ProfileController
         return $this->responseFactory->view('profile.html.twig', [
             'request' => $request,
             'profile' => $profile,
-            'session' => $this->session // <-- Add this line!
+            'session' => $this->session
         ]);
     }
 
