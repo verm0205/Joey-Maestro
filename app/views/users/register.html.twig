@@ -1,0 +1,73 @@
+{% extends "partials/base.html.twig" %}
+{% set pageTitle = "Register | " %}
+
+{% block content %}
+    <div class="form-container">
+        <h1>Create Account</h1>
+
+        <form method="POST" action="/register">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        class="form-control {{ errors is defined and errors.name is defined ? 'input-error' : '' }}"
+                        value="{{ name is defined ? name : '' }}"
+                        autofocus
+                >
+                {% if errors is defined and errors.name is defined %}
+                    <span class="error" role="alert">{{ errors.name }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                        type="text"
+                        name="username"
+                        id="username"
+                        class="form-control {{ errors is defined and errors.username is defined ? 'input-error' : '' }}"
+                        value="{{ username is defined ? username : '' }}"
+                        autocomplete="username"
+                >
+                {% if errors is defined and errors.username is defined %}
+                    <span class="error" role="alert">{{ errors.username }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        class="form-control {{ errors is defined and errors.password is defined ? 'input-error' : '' }}"
+                        autocomplete="new-password"
+                >
+                {% if errors is defined and errors.password is defined %}
+                    <span class="error" role="alert">{{ errors.password }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="password_confirm">Confirm Password</label>
+                <input
+                        type="password"
+                        name="password_confirm"
+                        id="password_confirm"
+                        class="form-control {{ errors is defined and errors.password_confirm is defined ? 'input-error' : '' }}"
+                        autocomplete="new-password"
+                >
+                {% if errors is defined and errors.password_confirm is defined %}
+                    <span class="error" role="alert">{{ errors.password_confirm }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Register</button>
+                <a href="/login" class="btn btn-secondary">Already have an account?</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

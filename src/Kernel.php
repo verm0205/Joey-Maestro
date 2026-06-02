@@ -10,6 +10,12 @@ class Kernel
 
     private ConfigManager $configManager;
 
+    /** @var string[] */
+    private array $publicRoutes = [
+        '/login',
+        '/register',
+    ];
+
     /**
      * @param string[] $config
      * @throws \Exception
@@ -44,8 +50,6 @@ class Kernel
     {
         $serviceProvider->register($this->container);
 
-        // After services are registered, inject the logged-in user as a Twig global
-        // so every view can access {{ currentUser }}
         $session         = $this->container->get(Session::class);
         $responseFactory = $this->container->get(ResponseFactory::class);
 
@@ -62,6 +66,14 @@ class Kernel
 
     public function handle(Request $request): Response
     {
+        $session         = $this->container->get(Session::class);
+        $responseFactory = $this->container->get(ResponseFactory::class);
+
+        // If the user is not logged in and the route is not public, redirect to login
+        if (!in_array($request->path, $this->publicRoutes, true) && $session->get('user_id') === null) {
+            return $responseFactory->redirect('/login');
+        }
+
         return $this->router->dispatch($request);
     }
 

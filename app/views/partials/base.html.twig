@@ -22,15 +22,18 @@
         <li><a href="/blog" class="{{ request.path starts with '/blog' ? 'active' : '' }}">Blog</a></li>
         <li><a href="/tasks-api" class="{{ request.path == '/tasks-api' ? 'active' : '' }}">Tasks API</a></li>
 
-        {% if currentUser is not null and currentUser.role == 'admin' %}
-            <li><a href="/blog/manage" class="{{ request.path == '/blog/manage' ? 'active' : '' }}">Manage Blog</a></li>
+        {% if currentUser is not null %}
+            {% if currentUser.role == 'admin' %}
+                <li><a href="/blog/manage" class="{{ request.path == '/blog/manage' ? 'active' : '' }}">Manage Blog</a></li>
+            {% endif %}
             <li>
                 <form method="POST" action="/logout" style="display:inline;">
-                    <button type="submit" class="btn-nav-logout">Logout</button>
+                    <button type="submit" class="btn-nav-logout">Logout ({{ currentUser.name }})</button>
                 </form>
             </li>
         {% else %}
-            <li><a href="/login" class="{{ request.path == '/login' ? 'active' : '' }}">Admin Login</a></li>
+            <li><a href="/login" class="{{ request.path == '/login' ? 'active' : '' }}">Login</a></li>
+            <li><a href="/register" class="{{ request.path == '/register' ? 'active' : '' }}">Register</a></li>
         {% endif %}
     </ul>
 </nav>

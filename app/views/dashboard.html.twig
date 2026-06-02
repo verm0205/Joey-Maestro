@@ -11,9 +11,11 @@
         <p>Overzicht van alle eerstejaars te behalen EC's en resultaten per component.</p>
     </header>
 
-    <div style="margin-bottom: 1.5rem;">
-        <a href="/grades/create" class="btn btn-primary">+ Nieuw vak toevoegen</a>
-    </div>
+    {% if currentUser is not null and currentUser.role == 'admin' %}
+        <div style="margin-bottom: 1.5rem;">
+            <a href="/grades/create" class="btn btn-primary">+ Nieuw vak toevoegen</a>
+        </div>
+    {% endif %}
 
     <section class="dashboard">
         <table>
@@ -25,7 +27,9 @@
                 <th>Toetsing</th>
                 <th>Cijfer</th>
                 <th>Status</th>
-                <th>Acties</th>
+                {% if currentUser is not null and currentUser.role == 'admin' %}
+                    <th>Acties</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -37,11 +41,13 @@
                     <td>{{ grade.toetsing }}</td>
                     <td>{{ grade.cijfer is not null ? grade.cijfer : '-' }}</td>
                     <td>{{ statusLabels[grade.status] }}</td>
-                    <td>
-                        <a href="/grades/{{ grade.id }}/edit" class="btn btn-sm btn-outline">Bewerken</a>
-                        &nbsp;
-                        <a href="/grades/{{ grade.id }}/delete" class="btn btn-sm btn-danger">Verwijderen</a>
-                    </td>
+                    {% if currentUser is not null and currentUser.role == 'admin' %}
+                        <td>
+                            <a href="/grades/{{ grade.id }}/edit" class="btn btn-sm btn-outline">Bewerken</a>
+                            &nbsp;
+                            <a href="/grades/{{ grade.id }}/delete" class="btn btn-sm btn-danger">Verwijderen</a>
+                        </td>
+                    {% endif %}
                 </tr>
             {% else %}
                 <tr><td colspan="7" style="text-align:center;color:#888;">Geen vakken gevonden.</td></tr>
