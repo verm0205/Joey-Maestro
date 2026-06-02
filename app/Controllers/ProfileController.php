@@ -46,7 +46,6 @@ class ProfileController
 
         $profile = $this->profileRepository->get();
 
-        // Update this line to match your folder structure:
         return $this->responseFactory->view('profiles/edit.html.twig', [
             'request' => $request,
             'profile' => $profile,
@@ -73,6 +72,6 @@ class ProfileController
         // Add validation if needed, similar to GradeController
 
         $this->profileRepository->update($profile);
-        return $this->responseFactory->redirect('/profiles');
+        return $this->responseFactory->redirect('/profile');
     }
 }
