@@ -33,7 +33,8 @@ class ProfileController
         $profile = $this->profileRepository->get();
         return $this->responseFactory->view('profile.html.twig', [
             'request' => $request,
-            'profiles' => $profile
+            'profile' => $profile,
+            'session' => $this->session // <-- Add this line!
         ]);
     }
 
@@ -44,9 +45,12 @@ class ProfileController
         }
 
         $profile = $this->profileRepository->get();
+
+        // Update this line to match your folder structure:
         return $this->responseFactory->view('profiles/edit.html.twig', [
             'request' => $request,
-            'profiles' => $profile,
+            'profile' => $profile,
+            'session' => $this->session
         ]);
     }
 

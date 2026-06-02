@@ -51,9 +51,9 @@ class RouteProvider implements RouteProviderInterface
         $router->addRoute('POST', '/logout', fn($r) => $userController->logout($r));
 
         $profileController = $container->get(\App\Controllers\ProfileController::class);
-        $router->addRoute('GET', '/profiles', fn($r) => $profileController->show($r));
-        $router->addRoute('GET', '/profiles/edit', fn($r) => $profileController->edit($r));
-        $router->addRoute('POST', '/profiles/edit', fn($r) => $profileController->update($r));
+        $router->addRoute('GET', '/profile', fn($r) => $profileController->show($r));
+        $router->addRoute('GET', '/profile/edit', fn($r) => $profileController->edit($r));
+        $router->addRoute('POST', '/profile/edit', fn($r) => $profileController->update($r));
 
         $apiController = $container->get(ApiController::class);
         $router->addRoute('GET', '/api/grades', fn($r) => $apiController->grades($r));
