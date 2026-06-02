@@ -1,27 +1,53 @@
 {% extends "partials/base.html.twig" %}
-{% set pageTitle = "Profiel" %}
+
+{% set pageTitle = "Mijn Profiel" %}
 
 {% block content %}
-    <h1>Profiel</h1>
+    <header style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1>Profiel</h1>
+            <p>Welkom op mijn introductiepagina.</p>
+        </div>
 
-    {% if session.get('user') %}
-        <a href="/profile/edit" class="btn btn-primary">Profiel bewerken</a>
-    {% endif %}
+        {% if session.get('user') %}
+            <a href="/profiles/edit" class="btn btn-primary" style="margin-left: auto;">Profiel bewerken</a>
+        {% endif %}
+    </header>
 
-    <h2>Wie ben ik?</h2>
-    <p>{{ profile.about_me }}</p>
+    <article class="profile">
+        <img src="/img/joeypfp.jpg" alt="Joey Vermeulen" style="float:left; width:140px; margin-right: 20px; border-radius: var(--radius);">
 
-    <h2>Persoonlijke Kenmerken & Skills</h2>
-    <ul>
-        <li><strong>Leergierig:</strong> {{ profile.eager_to_learn }}</li>
-        <li><strong>Doorzettingsvermogen:</strong> {{ profile.perseverance }}</li>
-        <li><strong>Teamspeler:</strong> {{ profile.team_player }}</li>
-        <li><strong>Talen:</strong> {{ profile.languages }}</li>
-    </ul>
+        <h2>Wie ben ik?</h2>
+        <p>
+            {{ profile.about_me|nl2br }}
+        </p>
 
-    <h2>Contact / Links</h2>
-    <ul>
-        <li><strong>GitHub:</strong> <a href="https://{{ profile.github_url }}">{{ profile.github_url }}</a></li>
-        <li><strong>Email:</strong> <a href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>
-    </ul>
+        <div style="clear: both; padding-top: 20px;">
+            <article>
+                <h3>Persoonlijke Kenmerken & Skills</h3>
+                <p class="post-meta">Wat typeert mij als student</p>
+                <ul>
+                    <li><strong>Leergierig:</strong> {{ profile.eager_to_learn }}</li>
+                    <li><strong>Doorzettingsvermogen:</strong> {{ profile.perseverance }}</li>
+                    <li><strong>Teamspeler:</strong> {{ profile.team_player }}</li>
+                    <li><strong>Talen:</strong> {{ profile.languages }}</li>
+                </ul>
+            </article>
+        </div>
+
+        <article style="margin-top: 30px;">
+            <h2>Contact / Links</h2>
+            <p class="post-meta">Handige links en contactgegevens</p>
+            <aside class="aside-menu" aria-label="Links relevant voor studie">
+                <h3>Belangrijke bronnen</h3>
+                <ul>
+                    <li><strong>GitHub:</strong> <a href="{{ profile.github_url }}" target="_blank" rel="noopener noreferrer">{{ profile.github_url }}</a></li>
+                    <li><strong>HZ University:</strong> <a href="https://www.hz.nl/" target="_blank" rel="noopener noreferrer">hz.nl</a></li>
+                    <li><strong>Email:</strong> <a href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>
+                    <li><strong>HZ CER:</strong> <a href="https://oer.hz.nl/" target="_blank" rel="noopener noreferrer">Course & Examination Regulations</a></li>
+                    <li><strong>Learn:</strong> <a href="https://learn.hz.nl" target="_blank" rel="noopener noreferrer">HZ Learn Omgeving</a></li>
+                </ul>
+            </aside>
+        </article>
+    </article>
 {% endblock %}
