@@ -1,5 +1,5 @@
 CREATE TABLE profiles (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
   about_me TEXT NOT NULL,
   eager_to_learn TEXT,
   perseverance TEXT,
