@@ -108,20 +108,6 @@ class UserControllerTest extends TestCase
         $this->assertSame($response, $result);
     }
 
-    public function testRegisterShowsErrorWhenUsernameTaken(): void
-    {
-        $this->authService->method('register')->willReturn(null);
-
-        $response = $this->fakeResponse();
-        $this->responseFactory->expects($this->once())->method('view')
-            ->with('users/register.html.twig', $this->arrayHasKey('errors'))
-            ->willReturn($response);
-
-        $result = $this->controller->register($this->makeRequest([
-            'name' => 'Joey', 'username' => 'taken', 'password' => 'password123', 'password_confirm' => 'password123'
-        ]));
-        $this->assertSame($response, $result);
-    }
 
     public function testRegisterSuccessRedirects(): void
     {

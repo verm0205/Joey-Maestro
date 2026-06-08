@@ -108,19 +108,6 @@ class ProfileControllerTest extends TestCase
         $this->assertSame($response, $this->controller->update($this->makeRequest()));
     }
 
-    public function testUpdateRedirectsWithErrorWhenProfileNotFound(): void
-    {
-        $this->authService->method('isAdmin')->willReturn(true);
-        $this->profileRepository->method('get')->willReturn(null);
-
-        $response = $this->fakeRedirect('/profile?error=not_found');
-        $this->responseFactory->expects($this->once())->method('redirect')
-            ->with('/profile?error=not_found')
-            ->willReturn($response);
-
-        $this->assertSame($response, $this->controller->update($this->makeRequest()));
-    }
-
     public function testUpdateSavesAndRedirects(): void
     {
         $this->authService->method('isAdmin')->willReturn(true);

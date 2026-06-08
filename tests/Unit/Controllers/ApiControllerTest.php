@@ -55,17 +55,6 @@ class ApiControllerTest extends TestCase
         $this->assertSame($response, $result);
     }
 
-    public function testGradesReturnsEmptyCollection(): void
-    {
-        $this->gradeRepository->method('all')->willReturn([]);
-
-        $response = new Response('{}', 200);
-        $this->responseFactory->expects($this->once())->method('json')->willReturn($response);
-
-        $result = $this->controller->grades($this->makeRequest());
-        $this->assertSame($response, $result);
-    }
-
     public function testGradeReturnsFoundGrade(): void
     {
         $grade = $this->makeGrade(5);

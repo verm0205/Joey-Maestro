@@ -34,6 +34,16 @@ class BlogControllerTest extends TestCase
         );
     }
 
+    private function fakeView(): Response
+    {
+        return new Response('<html></html>', 200);
+    }
+
+    private function fakeRedirect(string $url): Response
+    {
+        return new Response('', 302, 'Location: ' . $url);
+    }
+
     private function makeRequest(array $post = [], array $route = []): Request
     {
         $r = new Request('GET', '/blog', [], $post);
@@ -88,6 +98,154 @@ class BlogControllerTest extends TestCase
         $this->responseFactory->method('redirect')->willReturn($response);
 
         $this->assertSame($response, $this->controller->store($this->makeRequest()));
+    }
+
+    public function testStoreShowsErrorsWhenFieldsEmpty(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(true);
+
+        $response = $this->fakeView();
+        $this->responseFactory->expects($this->once())->method('view')
+            ->with('blogs/create.html.twig', $this->arrayHasKey('errors'))
+            ->willReturn($response);
+
+        $result = $this->controller->store($this->makeRequest([
+            'title' => '', 'body' => '', 'status' => 'draft'
+        ]));
+        $this->assertSame($response, $result);
+    }
+
+    public function testStoreShowsErrorForInvalidStatus(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(true);
+
+        $response = $this->fakeView();
+        $this->responseFactory->method('view')->willReturn($response);
+
+        $result = $this->controller->store($this->makeRequest([
+            'title' => 'Hello', 'body' => 'World', 'status' => 'invalid'
+        ]));
+        $this->assertSame($response, $result);
+    }
+
+    public function testStoreRedirectsOnSuccess(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(true);
+        $this->postRepository->method('insert')->willReturn($this->makePost());
+
+        $response = $this->fakeRedirect('/blog/manage');
+        $this->responseFactory->expects($this->once())->method('redirect')->with('/blog/manage')->willReturn($response);
+
+        $result = $this->controller->store($this->makeRequest([
+            'title' => 'Hello World', 'body' => 'Some content here', 'status' => 'published'
+        ]));
+        $this->assertSame($response, $result);
+    }
+
+    public function testStoreReturnsInternalErrorWhenInsertFails(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(true);
+        $this->postRepository->method('insert')->willReturn(null);
+
+        $response = new Response('', 500);
+        $this->responseFactory->expects($this->once())->method('internalError')->willReturn($response);
+
+        $result = $this->controller->store($this->makeRequest([
+            'title' => 'Hello World', 'body' => 'Some content here', 'status' => 'published'
+        ]));
+        $this->assertSame($response, $result);
+    }
+
+    // --- edit ---
+
+    public function testEditRedirectsWhenNotAdmin(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(false);
+
+        $response = $this->fakeRedirect('/login');
+        $this->responseFactory->expects($this->once())->method('redirect')->with('/login')->willReturn($response);
+
+        $this->assertSame($response, $this->controller->edit($this->makeRequest([], ['id' => '1'])));
+    }
+
+    public function testEditReturns404WhenNotFound(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(true);
+        $this->postRepository->method('find')->willReturn(null);
+
+        $response = new Response('', 404);
+        $this->responseFactory->expects($this->once())->method('notFound')->willReturn($response);
+
+        $this->assertSame($response, $this->controller->edit($this->makeRequest([], ['id' => '99'])));
+    }
+
+    public function testEditRendersFormWithPost(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(true);
+        $this->postRepository->method('find')->willReturn($this->makePost());
+
+        $response = $this->fakeView();
+        $this->responseFactory->expects($this->once())->method('view')
+            ->with('blogs/edit.html.twig', $this->arrayHasKey('post'))
+            ->willReturn($response);
+
+        $this->assertSame($response, $this->controller->edit($this->makeRequest([], ['id' => '1'])));
+    }
+
+    // --- update ---
+
+    public function testUpdateRedirectsWhenNotAdmin(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(false);
+
+        $response = $this->fakeRedirect('/login');
+        $this->responseFactory->expects($this->once())->method('redirect')->with('/login')->willReturn($response);
+
+        $this->assertSame($response, $this->controller->update($this->makeRequest([], ['id' => '1'])));
+    }
+
+    public function testUpdateReturns404WhenNotFound(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(true);
+        $this->postRepository->method('find')->willReturn(null);
+
+        $response = new Response('', 404);
+        $this->responseFactory->expects($this->once())->method('notFound')->willReturn($response);
+
+        $this->assertSame($response, $this->controller->update($this->makeRequest([], ['id' => '99'])));
+    }
+
+    public function testUpdateShowsErrorsWhenFieldsEmpty(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(true);
+        $this->postRepository->method('find')->willReturn($this->makePost());
+
+        $response = $this->fakeView();
+        $this->responseFactory->expects($this->once())->method('view')
+            ->with('blogs/edit.html.twig', $this->arrayHasKey('errors'))
+            ->willReturn($response);
+
+        $result = $this->controller->update($this->makeRequest(
+            ['title' => '', 'body' => '', 'status' => 'draft'],
+            ['id' => '1']
+        ));
+        $this->assertSame($response, $result);
+    }
+
+    public function testUpdateRedirectsOnSuccess(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(true);
+        $this->postRepository->method('find')->willReturn($this->makePost());
+        $this->postRepository->method('update')->willReturn(true);
+
+        $response = $this->fakeRedirect('/blog/manage');
+        $this->responseFactory->expects($this->once())->method('redirect')->with('/blog/manage')->willReturn($response);
+
+        $result = $this->controller->update($this->makeRequest(
+            ['title' => 'Updated', 'body' => 'Updated content', 'status' => 'published'],
+            ['id' => '1']
+        ));
+        $this->assertSame($response, $result);
     }
 
     public function testDeleteRedirectsWhenNotAdmin(): void

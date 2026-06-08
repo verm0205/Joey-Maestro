@@ -54,6 +54,16 @@ class GradeControllerTest extends TestCase
         return $g;
     }
 
+    private function fakeView(): Response
+    {
+        return new Response('<html></html>', 200);
+    }
+
+    private function fakeRedirect(string $url): Response
+    {
+        return new Response('', 302, 'Location: ' . $url);
+    }
+
     public function testIndexRendersGrades(): void
     {
         $this->gradeRepository->method('all')->willReturn([$this->makeGrade()]);
@@ -89,7 +99,60 @@ class GradeControllerTest extends TestCase
 
         $this->assertSame($response, $this->controller->edit($this->makeRequest([], ['id' => '1'])));
     }
+    // --- update ---
 
+    public function testUpdateRedirectsWhenNotAdmin(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(false);
+        $response = $this->fakeRedirect('/login');
+        $this->responseFactory->expects($this->once())->method('redirect')->with('/login')->willReturn($response);
+
+        $this->assertSame($response, $this->controller->update($this->makeRequest([], ['id' => '1'])));
+    }
+
+    public function testUpdateReturns404WhenGradeNotFound(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(true);
+        $this->gradeRepository->method('find')->willReturn(null);
+
+        $response = new Response('', 404);
+        $this->responseFactory->expects($this->once())->method('notFound')->willReturn($response);
+
+        $this->assertSame($response, $this->controller->update($this->makeRequest([], ['id' => '99'])));
+    }
+
+    public function testUpdateShowsErrorsWhenFieldsEmpty(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(true);
+        $this->gradeRepository->method('find')->willReturn($this->makeGrade());
+
+        $response = $this->fakeView();
+        $this->responseFactory->expects($this->once())->method('view')
+            ->with('grades/edit.html.twig', $this->arrayHasKey('errors'))
+            ->willReturn($response);
+
+        $result = $this->controller->update($this->makeRequest(
+            ['quarter' => '', 'course' => '', 'ec' => '', 'toetsing' => '', 'status' => '0'],
+            ['id' => '1']
+        ));
+        $this->assertSame($response, $result);
+    }
+
+    public function testUpdateRedirectsOnSuccess(): void
+    {
+        $this->authService->method('isAdmin')->willReturn(true);
+        $this->gradeRepository->method('find')->willReturn($this->makeGrade());
+        $this->gradeRepository->method('update')->willReturn(true);
+
+        $response = $this->fakeRedirect('/dashboard');
+        $this->responseFactory->expects($this->once())->method('redirect')->with('/dashboard')->willReturn($response);
+
+        $result = $this->controller->update($this->makeRequest(
+            ['quarter' => 'Q1', 'course' => 'ITDP', 'ec' => '3', 'toetsing' => 'Portfolio', 'cijfer' => '7', 'status' => '1'],
+            ['id' => '1']
+        ));
+        $this->assertSame($response, $result);
+    }
     public function testDeleteRedirectsWhenNotAdmin(): void
     {
         $this->authService->method('isAdmin')->willReturn(false);
