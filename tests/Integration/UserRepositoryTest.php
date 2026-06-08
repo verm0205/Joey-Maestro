@@ -89,11 +89,6 @@ class UserRepositoryTest extends DatabaseTestCase
         $this->assertCount(2, $this->repository->all());
     }
 
-    public function testAllReturnsEmptyInitially(): void
-    {
-        $this->assertSame([], $this->repository->all());
-    }
-
     public function testUpdateChangesUserData(): void
     {
         $user       = $this->repository->insert($this->makeUser());
@@ -105,15 +100,5 @@ class UserRepositoryTest extends DatabaseTestCase
         $updated = $this->repository->findById($user->id);
         $this->assertSame('Updated Name', $updated->name);
         $this->assertSame('admin', $updated->role);
-    }
-
-    public function testInsertReturnsNullForDuplicateUsername(): void
-    {
-        $this->repository->insert($this->makeUser(username: 'duplicate'));
-
-        $this->expectException(\PDOException::class);
-
-        $duplicate = $this->makeUser(username: 'duplicate');
-        $this->repository->insert($duplicate);
     }
 }

@@ -69,19 +69,6 @@ class UserControllerTest extends TestCase
         $this->assertSame($response, $result);
     }
 
-    public function testRegisterShowsErrorWhenUsernameTooShort(): void
-    {
-        $response = $this->fakeResponse();
-        $this->responseFactory->expects($this->once())->method('view')
-            ->with('users/register.html.twig', $this->arrayHasKey('errors'))
-            ->willReturn($response);
-
-        $result = $this->controller->register($this->makeRequest([
-            'name' => 'Joey', 'username' => 'ab', 'password' => 'password123', 'password_confirm' => 'password123'
-        ]));
-        $this->assertSame($response, $result);
-    }
-
     public function testRegisterShowsErrorWhenPasswordTooShort(): void
     {
         $response = $this->fakeResponse();

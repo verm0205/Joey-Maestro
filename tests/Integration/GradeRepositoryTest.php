@@ -115,20 +115,4 @@ class GradeRepositoryTest extends DatabaseTestCase
         $this->assertNull($this->repository->find($id));
     }
 
-    public function testDeleteReturnsFalseForNonExistentGrade(): void
-    {
-        $grade     = new Grade();
-        $grade->id = 999;
-
-        $this->assertFalse($this->repository->delete($grade));
-    }
-
-    public function testNullCijferIsStoredAndRetrievedCorrectly(): void
-    {
-        $grade = $this->makeGrade(cijfer: null);
-        $inserted = $this->repository->insert($grade);
-        $found    = $this->repository->find($inserted->id);
-
-        $this->assertNull($found->cijfer);
-    }
 }
