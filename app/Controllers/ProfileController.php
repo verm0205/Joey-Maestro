@@ -61,6 +61,10 @@ class ProfileController
 
         $profile = $this->profileRepository->get();
 
+        if (!$profile) {
+            return $this->responseFactory->redirect('/profile?error=not_found');
+        }
+
         $profile->about_me = trim($request->get('about_me') ?? '');
         $profile->eager_to_learn = trim($request->get('eager_to_learn') ?? '');
         $profile->perseverance = trim($request->get('perseverance') ?? '');
@@ -68,8 +72,6 @@ class ProfileController
         $profile->languages = trim($request->get('languages') ?? '');
         $profile->github_url = trim($request->get('github_url') ?? '');
         $profile->email = trim($request->get('email') ?? '');
-
-        // Add validation if needed, similar to GradeController
 
         $this->profileRepository->update($profile);
         return $this->responseFactory->redirect('/profile');

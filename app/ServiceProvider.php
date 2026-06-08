@@ -62,7 +62,12 @@ class ServiceProvider implements ServiceProviderInterface
         $apiController = new ApiController($responseFactory, $gradeRepository);
         $container->set(ApiController::class, $apiController);
 
-        $profileController = new \App\Controllers\ProfileController($responseFactory, $profileRepository, $authService, $session);
+        $profileController = new \App\Controllers\ProfileController(
+            $responseFactory,
+            $profileRepository,
+            $authService,
+            $session
+        );
         $container->set(\App\Controllers\ProfileController::class, $profileController);
     }
 }
