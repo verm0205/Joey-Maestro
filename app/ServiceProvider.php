@@ -23,9 +23,6 @@ use Framework\Session;
 
 class ServiceProvider implements ServiceProviderInterface
 {
-    /**
-     * @throws Exception
-     */
     public function register(ServiceContainer $container): void
     {
         $responseFactory = $container->get(ResponseFactory::class);

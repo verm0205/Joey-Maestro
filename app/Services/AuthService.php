@@ -50,10 +50,6 @@ class AuthService
         $session->destroy();
     }
 
-    /**
-     * Re-fetches the user from the DB on every request.
-     * Constant session check — if user deleted or role changed, access is revoked immediately (A01).
-     */
     public function getLoggedInUser(Session $session): ?User
     {
         $userId = $session->get('user_id');

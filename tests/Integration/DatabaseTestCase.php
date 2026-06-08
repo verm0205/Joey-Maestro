@@ -11,7 +11,6 @@ abstract class DatabaseTestCase extends TestCase
 
     protected function setUp(): void
     {
-        // SQLite in-memory — no env vars set so Database uses sqlite: path
         $this->db = new Database(':memory:');
         $this->createTables();
     }

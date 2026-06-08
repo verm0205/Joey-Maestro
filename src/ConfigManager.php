@@ -22,9 +22,6 @@ class ConfigManager
         $this->config = array_merge($this->defaults, $config);
     }
 
-    /**
-     * @throws Exception
-     */
     public function get(string $key): string
     {
         if (!isset($this->config[$key])) {
@@ -33,9 +30,6 @@ class ConfigManager
         return $this->config[$key];
     }
 
-    /**
-     * @throws Exception
-     */
     public function isProduction(): bool
     {
         return (strtoupper($this->get('APP_ENV')) === 'PRODUCTION');

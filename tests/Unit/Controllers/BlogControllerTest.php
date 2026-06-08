@@ -156,8 +156,6 @@ class BlogControllerTest extends TestCase
         $this->assertSame($response, $result);
     }
 
-    // --- edit ---
-
     public function testEditRedirectsWhenNotAdmin(): void
     {
         $this->authService->method('isAdmin')->willReturn(false);
@@ -191,8 +189,6 @@ class BlogControllerTest extends TestCase
 
         $this->assertSame($response, $this->controller->edit($this->makeRequest([], ['id' => '1'])));
     }
-
-    // --- update ---
 
     public function testUpdateRedirectsWhenNotAdmin(): void
     {

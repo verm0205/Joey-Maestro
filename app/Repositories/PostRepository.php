@@ -47,7 +47,7 @@ class PostRepository implements PostRepositoryInterface
     public function insert(Post $post): ?Post
     {
         if ($post->path === '') {
-            $slug = strtolower(trim(preg_replace('/[^a-z0-9]+/', '-', $post->title), '-'));
+            $slug = strtolower(trim(preg_replace('/[^a-z0-9]+/', '-', $post->title) ?? '', '-'));
             $post->path = $slug ?: 'post';
         }
 

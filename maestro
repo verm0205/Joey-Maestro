@@ -1,6 +1,5 @@
 <?php
 
-// Ensure everything is there as it should be
 if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
     die('You must run composer install');
 }

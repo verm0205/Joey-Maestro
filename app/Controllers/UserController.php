@@ -81,7 +81,6 @@ class UserController
             ]);
         }
 
-        // Auto-login after registration
         $this->authService->login($username, $password, $this->session);
         $this->session->setFlash('success', 'Account aangemaakt! Welkom, ' . $name . '!');
         return $this->responseFactory->redirect('/');

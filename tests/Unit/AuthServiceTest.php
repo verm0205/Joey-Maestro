@@ -20,8 +20,6 @@ class AuthServiceTest extends TestCase
         $this->authService    = new AuthService($this->userRepository);
     }
 
-    // ── register ─────────────────────────────────────────────────────────────
-
     public function testRegisterHashesPasswordAndCallsInsert(): void
     {
         $plainPassword = 'secret123';
@@ -55,8 +53,6 @@ class AuthServiceTest extends TestCase
 
         $this->assertNull($result);
     }
-
-    // ── login ─────────────────────────────────────────────────────────────────
 
     public function testLoginReturnsNullWhenUserNotFound(): void
     {
@@ -103,8 +99,6 @@ class AuthServiceTest extends TestCase
         $this->assertSame($user, $result);
     }
 
-    // ── logout ────────────────────────────────────────────────────────────────
-
     public function testLogoutRegeneratesAndDestroysSession(): void
     {
         $session = $this->createMock(Session::class);
@@ -113,8 +107,6 @@ class AuthServiceTest extends TestCase
 
         $this->authService->logout($session);
     }
-
-    // ── getLoggedInUser ───────────────────────────────────────────────────────
 
     public function testGetLoggedInUserReturnsNullWhenNoSession(): void
     {
@@ -153,8 +145,6 @@ class AuthServiceTest extends TestCase
 
         $this->assertSame($user, $result);
     }
-
-    // ── isAdmin / isLoggedIn ──────────────────────────────────────────────────
 
     public function testIsAdminReturnsFalseWhenNotLoggedIn(): void
     {

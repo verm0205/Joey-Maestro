@@ -140,8 +140,6 @@ class GradeControllerTest extends TestCase
 
         $this->assertSame($response, $this->controller->edit($this->makeRequest([], ['id' => '1'])));
     }
-    // --- update ---
-
     public function testUpdateRedirectsWhenNotAdmin(): void
     {
         $this->authService->method('isAdmin')->willReturn(false);

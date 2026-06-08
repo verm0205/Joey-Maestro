@@ -13,9 +13,6 @@ use Framework\ServiceContainer;
 
 class RouteProvider implements RouteProviderInterface
 {
-    /**
-     * @throws \Exception
-     */
     public function register(Router $router, ServiceContainer $container): void
     {
         $homeController = $container->get(HomeController::class);

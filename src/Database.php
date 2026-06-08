@@ -21,7 +21,6 @@ class Database
             try {
                 $this->connection = new PDO($dsn, $user, $pass);
             } catch (\PDOException $e) {
-                // This will tell us EXACTLY what it tried to use (except password for security)
                 throw new \PDOException("Failed connecting to $user@$host: " . $e->getMessage());
             }
         } else {

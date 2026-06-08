@@ -17,9 +17,6 @@ class Response
         $this->header = $header;
     }
 
-    /**
-     * Send the response to the client.
-     */
     public function echo(): void
     {
         if ($this->header !== null) {

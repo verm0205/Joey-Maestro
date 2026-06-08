@@ -31,7 +31,6 @@ class HomeController
 
     public function dashboard(Request $request): Response
     {
-        // Hier kun je later data uit de database ophalen voor je voortgang
         return $this->responseFactory->view('dashboard.html.twig', [
             'request' => $request
         ]);
@@ -53,11 +52,4 @@ class HomeController
     {
         return $this->responseFactory->view('grades-api.html.twig', ['request' => $request]);
     }
-
-//    public function blogShow(Request $request): Response
-//    {
-//        $slug = $request->getAttribute('slug');
-//
-//        return $this->responseFactory->view("blogs/{$slug}.html.twig", ['request' => $request]);
-//    }
 }

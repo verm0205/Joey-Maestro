@@ -56,7 +56,6 @@ class Kernel
         $session         = $this->container->get(Session::class);
         $responseFactory = $this->container->get(ResponseFactory::class);
 
-        // If the user is not logged in and the route is not public, redirect to login
         if (!in_array($request->path, $this->publicRoutes, true) && $session->get('user_id') === null) {
             return $responseFactory->redirect('/login');
         }

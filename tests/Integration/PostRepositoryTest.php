@@ -134,8 +134,6 @@ class PostRepositoryTest extends DatabaseTestCase
 
     public function testInsertReturnsNullOnFailure(): void
     {
-        // Insert a post, then try to re-insert with the same object (no failure scenario without unique constraints)
-        // Instead test that a returned insert gives back the object
         $post   = $this->makePost();
         $result = $this->repository->insert($post);
         $this->assertInstanceOf(Post::class, $result);
