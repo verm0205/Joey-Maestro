@@ -38,3 +38,10 @@ if ($argv[1] === 'deptrac') {
 if ($argv[1] === 'phpcbf') {
     passthru('php vendor/bin/phpcbf --colors');
 }
+if ($argv[1] === 'test') {
+    passthru('php vendor/bin/phpunit --colors=always');
+}
+
+if ($argv[1] === 'test:coverage') {
+    passthru('php vendor/bin/phpunit --coverage-text --colors=always');
+}
