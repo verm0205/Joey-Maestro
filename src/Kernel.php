@@ -49,19 +49,6 @@ class Kernel
     public function registerServices(ServiceProviderInterface $serviceProvider): void
     {
         $serviceProvider->register($this->container);
-
-        $session         = $this->container->get(Session::class);
-        $responseFactory = $this->container->get(ResponseFactory::class);
-
-        $userId = $session->get('user_id');
-        if ($userId !== null) {
-            /** @var \App\Repositories\UserRepositoryInterface $userRepo */
-            $userRepo    = $this->container->get(\App\Repositories\UserRepositoryInterface::class);
-            $currentUser = $userRepo->findById((int) $userId);
-            $responseFactory->addGlobal('currentUser', $currentUser);
-        } else {
-            $responseFactory->addGlobal('currentUser', null);
-        }
     }
 
     public function handle(Request $request): Response

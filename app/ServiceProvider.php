@@ -69,5 +69,15 @@ class ServiceProvider implements ServiceProviderInterface
             $session
         );
         $container->set(\App\Controllers\ProfileController::class, $profileController);
+
+        $userId = $session->get('user_id');
+        if ($userId !== null) {
+            $currentUser = $userRepository->findById((int) $userId);
+            $responseFactory->addGlobal('currentUser', $currentUser);
+        } else {
+            $responseFactory->addGlobal('currentUser', null);
+        }
+
+        $responseFactory->addGlobal('flashMessages', $session->getFlash());
     }
 }
