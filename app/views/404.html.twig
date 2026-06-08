@@ -1,8 +1,19 @@
 {% extends "partials/base.html.twig" %}
 
-{% set pageTitle = "Not Found" %}
+{% set pageTitle = "404 Niet gevonden" %}
 
 {% block content %}
-    <h1>Not Found</h1>
-    <p>The requested resource has not been found.</p>
+    <div class="error-page">
+        <div class="error-code">404</div>
+        <h1>Pagina niet gevonden</h1>
+        <p class="error-desc">De pagina waar je naar op zoek bent bestaat niet of is verplaatst.</p>
+
+        <ul class="error-actions">
+            <li><a href="/" class="btn btn-primary">← Ga naar Home</a></li>
+            <li><a href="/dashboard" class="btn btn-secondary">Mijn voortgang</a></li>
+            <li><a href="/blog" class="btn btn-secondary">Blog</a></li>
+        </ul>
+
+        <p class="error-help">Als je denkt dat dit een fout is, neem dan contact op via <a href="mailto:verm0205@hz.nl">verm0205@hz.nl</a>.</p>
+    </div>
 {% endblock %}

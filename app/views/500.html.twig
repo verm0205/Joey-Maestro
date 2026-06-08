@@ -1,8 +1,18 @@
 {% extends "partials/base.html.twig" %}
 
-{% set pageTitle = "Internal Error" %}
+{% set pageTitle = "500 Interne fout" %}
 
 {% block content %}
-    <h1>Internal Error</h1>
-    <p>An internal error has occurred. Apologies for the inconvenience.</p>
+    <div class="error-page">
+        <div class="error-code">500</div>
+        <h1>Interne fout</h1>
+        <p class="error-desc">Er is een onverwachte fout opgetreden. Excuses voor het ongemak.</p>
+
+        <ul class="error-actions">
+            <li><a href="/" class="btn btn-primary">← Ga naar Home</a></li>
+            <li><a href="/dashboard" class="btn btn-secondary">Mijn voortgang</a></li>
+        </ul>
+
+        <p class="error-help">Probeer het later opnieuw. Als het probleem aanhoudt, neem dan contact op via <a href="mailto:verm0205@hz.nl">verm0205@hz.nl</a>.</p>
+    </div>
 {% endblock %}
