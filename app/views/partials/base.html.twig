@@ -39,6 +39,11 @@
 </nav>
 
 <main>
+    {% if flashMessages is defined and flashMessages is not empty %}
+        {% for flash in flashMessages %}
+            <div class="flash flash-{{ flash.type }}" role="alert">{{ flash.message }}</div>
+        {% endfor %}
+    {% endif %}
     {% block content %}{% endblock %}
 </main>
 </body>

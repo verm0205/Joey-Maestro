@@ -147,6 +147,7 @@ class UserControllerTest extends TestCase
     {
         $user = new User();
         $user->id = 1;
+        $user->name = 'Joey';
         $this->authService->method('login')->willReturn($user);
 
         $response = new Response('', 302, 'Location: /');

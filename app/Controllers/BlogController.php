@@ -125,6 +125,7 @@ class BlogController
             return $this->responseFactory->internalError();
         }
 
+        $this->session->setFlash('success', 'Post "' . $title . '" is aangemaakt.');
         return $this->responseFactory->redirect('/blog/manage');
     }
 
@@ -193,6 +194,7 @@ class BlogController
         }
 
         $this->postRepository->update($post);
+        $this->session->setFlash('success', 'Post "' . $post->title . '" is bijgewerkt.');
         return $this->responseFactory->redirect('/blog/manage');
     }
 
@@ -229,6 +231,7 @@ class BlogController
         }
 
         $this->postRepository->delete($post);
+        $this->session->setFlash('success', 'Post "' . $post->title . '" is verwijderd.');
         return $this->responseFactory->redirect('/blog/manage');
     }
 }

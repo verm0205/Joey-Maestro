@@ -74,6 +74,7 @@ class ProfileController
         $profile->email = trim($request->get('email') ?? '');
 
         $this->profileRepository->update($profile);
+        $this->session->setFlash('success', 'Profiel is bijgewerkt.');
         return $this->responseFactory->redirect('/profile');
     }
 }

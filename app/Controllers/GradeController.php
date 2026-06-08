@@ -113,6 +113,7 @@ class GradeController
             return $this->responseFactory->internalError();
         }
 
+        $this->session->setFlash('success', 'Vak "' . $grade->course . '" is toegevoegd.');
         return $this->responseFactory->redirect('/dashboard');
     }
 
@@ -192,6 +193,7 @@ class GradeController
         }
 
         $this->gradeRepository->update($grade);
+        $this->session->setFlash('success', 'Vak "' . $grade->course . '" is bijgewerkt.');
         return $this->responseFactory->redirect('/dashboard');
     }
 
@@ -228,6 +230,7 @@ class GradeController
         }
 
         $this->gradeRepository->delete($grade);
+        $this->session->setFlash('success', 'Vak "' . $grade->course . '" is verwijderd.');
         return $this->responseFactory->redirect('/dashboard');
     }
 }

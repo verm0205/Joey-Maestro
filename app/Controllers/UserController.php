@@ -83,6 +83,7 @@ class UserController
 
         // Auto-login after registration
         $this->authService->login($username, $password, $this->session);
+        $this->session->setFlash('success', 'Account aangemaakt! Welkom, ' . $name . '!');
         return $this->responseFactory->redirect('/');
     }
 
@@ -108,11 +109,13 @@ class UserController
             ]);
         }
 
+        $this->session->setFlash('success', 'Welkom terug, ' . $user->name . '!');
         return $this->responseFactory->redirect('/');
     }
 
     public function logout(Request $request): Response
     {
+        $this->session->setFlash('info', 'Je bent uitgelogd.');
         $this->authService->logout($this->session);
         return $this->responseFactory->redirect('/login');
     }
