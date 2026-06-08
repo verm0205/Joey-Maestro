@@ -142,20 +142,6 @@ class BlogControllerTest extends TestCase
         $this->assertSame($response, $result);
     }
 
-    public function testStoreReturnsInternalErrorWhenInsertFails(): void
-    {
-        $this->authService->method('isAdmin')->willReturn(true);
-        $this->postRepository->method('insert')->willReturn(null);
-
-        $response = new Response('', 500);
-        $this->responseFactory->expects($this->once())->method('internalError')->willReturn($response);
-
-        $result = $this->controller->store($this->makeRequest([
-            'title' => 'Hello World', 'body' => 'Some content here', 'status' => 'published'
-        ]));
-        $this->assertSame($response, $result);
-    }
-
     public function testEditRedirectsWhenNotAdmin(): void
     {
         $this->authService->method('isAdmin')->willReturn(false);

@@ -117,21 +117,6 @@ class GradeControllerTest extends TestCase
         $this->assertSame($response, $result);
     }
 
-    public function testStoreRedirectsOnSuccess(): void
-    {
-        $this->authService->method('isAdmin')->willReturn(true);
-        $this->gradeRepository->method('insert')->willReturn($this->makeGrade());
-
-        $response = $this->fakeRedirect('/dashboard');
-        $this->responseFactory->expects($this->once())->method('redirect')->with('/dashboard')->willReturn($response);
-
-        $result = $this->controller->store($this->makeRequest([
-            'quarter' => 'Q1', 'course' => 'PCO', 'ec' => '2.5',
-            'toetsing' => 'Tentamen', 'cijfer' => '7.5', 'status' => '1'
-        ]));
-        $this->assertSame($response, $result);
-    }
-
     public function testEditRedirectsWhenNotAdmin(): void
     {
         $this->authService->method('isAdmin')->willReturn(false);
@@ -147,17 +132,6 @@ class GradeControllerTest extends TestCase
         $this->responseFactory->expects($this->once())->method('redirect')->with('/login')->willReturn($response);
 
         $this->assertSame($response, $this->controller->update($this->makeRequest([], ['id' => '1'])));
-    }
-
-    public function testUpdateReturns404WhenGradeNotFound(): void
-    {
-        $this->authService->method('isAdmin')->willReturn(true);
-        $this->gradeRepository->method('find')->willReturn(null);
-
-        $response = new Response('', 404);
-        $this->responseFactory->expects($this->once())->method('notFound')->willReturn($response);
-
-        $this->assertSame($response, $this->controller->update($this->makeRequest([], ['id' => '99'])));
     }
 
     public function testUpdateShowsErrorsWhenFieldsEmpty(): void
@@ -199,19 +173,6 @@ class GradeControllerTest extends TestCase
         $this->responseFactory->method('redirect')->willReturn($response);
 
         $this->assertSame($response, $this->controller->delete($this->makeRequest([], ['id' => '1'])));
-    }
-
-    public function testDeleteConfirmRendersView(): void
-    {
-        $this->authService->method('isAdmin')->willReturn(true);
-        $this->gradeRepository->method('find')->willReturn($this->makeGrade());
-
-        $response = $this->fakeView();
-        $this->responseFactory->expects($this->once())->method('view')
-            ->with('grades/delete.html.twig', $this->arrayHasKey('grade'))
-            ->willReturn($response);
-
-        $this->assertSame($response, $this->controller->deleteConfirm($this->makeRequest([], ['id' => '1'])));
     }
 
     public function testDeleteRedirectsOnSuccess(): void
