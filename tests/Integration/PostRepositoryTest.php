@@ -15,6 +15,7 @@ class PostRepositoryTest extends DatabaseTestCase
         CREATE TABLE posts (
             id         INTEGER PRIMARY KEY AUTOINCREMENT,
             title      TEXT    NOT NULL,
+            path       TEXT    NOT NULL DEFAULT "",
             body       TEXT    NOT NULL,
             status     TEXT    NOT NULL DEFAULT "draft",
             created_at TEXT    NOT NULL DEFAULT "",

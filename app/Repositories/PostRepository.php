@@ -46,11 +46,17 @@ class PostRepository implements PostRepositoryInterface
 
     public function insert(Post $post): ?Post
     {
+        if ($post->path === '') {
+            $slug = strtolower(trim(preg_replace('/[^a-z0-9]+/', '-', $post->title), '-'));
+            $post->path = $slug ?: 'post';
+        }
+
         $stmt = $this->database->run(
-            'INSERT INTO posts (title, body, status)
-             VALUES (:title, :body, :status)',
+            'INSERT INTO posts (title, path, body, status)
+             VALUES (:title, :path, :body, :status)',
             [
                 'title'  => $post->title,
+                'path'   => $post->path,
                 'body'   => $post->body,
                 'status' => $post->status,
             ]
@@ -96,6 +102,7 @@ class PostRepository implements PostRepositoryInterface
         $post             = new Post();
         $post->id         = (int) $row->id;
         $post->title      = $row->title;
+        $post->path       = $row->path ?? '';
         $post->body       = $row->body;
         $post->status     = $row->status;
         $post->created_at = $row->created_at;

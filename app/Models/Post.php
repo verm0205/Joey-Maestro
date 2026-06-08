@@ -6,6 +6,7 @@ class Post
 {
     public int $id;
     public string $title;
+    public string $path = '';
     public string $body;
     public string $status;
     public string $created_at;
