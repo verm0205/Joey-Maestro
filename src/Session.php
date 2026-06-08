@@ -36,4 +36,14 @@ class Session
         $_SESSION = [];
         session_destroy();
     }
+    /**
+     * @return array<string, string>
+     */
+    public function getFlash(): array
+    {
+        $messages = $_SESSION['flash'] ?? [];
+        unset($_SESSION['flash']);
+
+        return $messages;
+    }
 }
